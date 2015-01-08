@@ -46,39 +46,44 @@ public class TileFurnace extends TileMachine
         setEnabled(heatLevel > 0);
     }
 
-    /** Checks if we can smelt the item */
+    /**
+     * Checks if we can smelt the item
+     */
     protected boolean canProcess()
     {
-        ItemStack input = this.getStackInSlot(0);
-        if(input != null) // check for intput
+        ItemStack itemstack = getRecipe();
+        if (itemstack != null)
         {
             ItemStack output = this.getStackInSlot(1);
 
-            if (output == null || output.stackSize <= output.getItem().getItemStackLimit(output)) // check for output room
+            if (output == null)
             {
-                ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(input);
-                if (itemstack != null) // check output can contain recipe
-                {
-                    if(output == null)
-                    {
-                        return true;
-                    }
-                    else if(output.isItemEqual(itemstack))
-                    {
-                        int newStackSize = output.stackSize + itemstack.stackSize; // check if we don't exceed max stack size
-                        return newStackSize <= getInventoryStackLimit() && newStackSize <= output.getMaxStackSize();
-                    }
-                }
+                return true;
+            }
+            else if (output.isItemEqual(itemstack) && output.stackSize <= output.getItem().getItemStackLimit(output)) // check for output room
+            {
+                int newStackSize = output.stackSize + itemstack.stackSize; // check if we don't exceed max stack size
+                return newStackSize <= getInventoryStackLimit() && newStackSize <= output.getMaxStackSize();
             }
         }
         return false;
     }
 
-    /** Processes the recipe */
+    /**
+     * Checks if we have a recipe for the input
+     */
+    protected ItemStack getRecipe()
+    {
+        return this.getStackInSlot(0) != null ? FurnaceRecipes.smelting().getSmeltingResult(this.getStackInSlot(0)) : null;
+    }
+
+    /**
+     * Processes the recipe
+     */
     protected void processRecipe()
     {
         ItemStack output = this.getStackInSlot(1);
-        ItemStack result = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(0));
+        ItemStack result = getRecipe();
 
         //Increase output stack size
         if (output == null)
