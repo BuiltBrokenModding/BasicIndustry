@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.IIcon;
 
 /**
@@ -29,17 +28,17 @@ public class TileFurnace extends TileMachine
     public void update()
     {
         super.update();
-        if (this.canSmelt())
+        if (this.canProcess())
         {
             ++this.processing_ticks;
 
             if (this.processing_ticks >= max_processing_ticks)
             {
                 this.processing_ticks = 0;
-                this.smeltItem();
+                this.processRecipe();
             }
         }
-        else if(heatLevel > 0)
+        else if (heatLevel > 0)
         {
             heatLevel--;
         }
@@ -47,47 +46,55 @@ public class TileFurnace extends TileMachine
         setEnabled(heatLevel > 0);
     }
 
-    private boolean canSmelt()
+    /** Checks if we can smelt the item */
+    protected boolean canProcess()
     {
         ItemStack input = this.getStackInSlot(0);
-        ItemStack output = this.getStackInSlot(1);
+        if(input != null) // check for intput
+        {
+            ItemStack output = this.getStackInSlot(1);
 
-        if ( input == null || output != null && output.stackSize >= output.getItem().getItemStackLimit(output))
-        {
-            return false;
+            if (output == null || output.stackSize <= output.getItem().getItemStackLimit(output)) // check for output room
+            {
+                ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(input);
+                if (itemstack != null) // check output can contain recipe
+                {
+                    if(output == null)
+                    {
+                        return true;
+                    }
+                    else if(output.isItemEqual(itemstack))
+                    {
+                        int newStackSize = output.stackSize + itemstack.stackSize; // check if we don't exceed max stack size
+                        return newStackSize <= getInventoryStackLimit() && newStackSize <= output.getMaxStackSize();
+                    }
+                }
+            }
         }
-        else
-        {
-            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(this.getStackInSlot(1));
-            if (itemstack == null) return false;
-            if (this.getStackInSlot(1) == null) return true;
-            if (!this.getStackInSlot(1).isItemEqual(itemstack)) return false;
-            int result = getStackInSlot(1).stackSize + itemstack.stackSize;
-            return result <= getInventoryStackLimit() && result <= this.getStackInSlot(1).getMaxStackSize();
-        }
+        return false;
     }
 
-    public void smeltItem()
+    /** Processes the recipe */
+    protected void processRecipe()
     {
-        if (this.canSmelt())
+        ItemStack output = this.getStackInSlot(1);
+        ItemStack result = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(0));
+
+        //Increase output stack size
+        if (output == null)
         {
-            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(1));
+            this.setInventorySlotContents(1, result.copy());
+        }
+        else if (output.getItem() == result.getItem())
+        {
+            output.stackSize += result.stackSize;
+        }
 
-            if (this.getStackInSlot(1) == null)
-            {
-                this.setInventorySlotContents(1, itemstack.copy());
-            }
-            else if (this.getStackInSlot(1).getItem() == itemstack.getItem())
-            {
-                this.getStackInSlot(1).stackSize += itemstack.stackSize;
-            }
-
-            --this.getStackInSlot(0).stackSize;
-
-            if (this.getStackInSlot(0).stackSize <= 0)
-            {
-                this.setInventorySlotContents(1, null);
-            }
+        //Decrease input stack size
+        --this.getStackInSlot(0).stackSize;
+        if (this.getStackInSlot(0).stackSize <= 0)
+        {
+            this.setInventorySlotContents(0, null);
         }
     }
 
@@ -113,7 +120,7 @@ public class TileFurnace extends TileMachine
     @Override
     public IIcon getIcon(int side)
     {
-        if(isEnabled())
+        if (isEnabled())
         {
             return Blocks.lit_furnace.getIcon(side, getMetadata());
         }

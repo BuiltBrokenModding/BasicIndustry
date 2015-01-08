@@ -1,10 +1,12 @@
 package com.builtbroken.industry.content;
 
+import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.lib.transform.vector.Vector3;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import io.netty.buffer.ByteBuf;
@@ -90,6 +92,16 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     }
 
     @Override
+    protected boolean onPlayerRightClick(EntityPlayer player, int side, Vector3 hit)
+    {
+        if(isServer())
+        {
+            openGui(player, BasicIndustry.INSTANCE);
+        }
+        return true;
+    }
+
+    @Override
     public void doUpdateGuiUsers()
     {
         if(ticks % 3 == 0)
@@ -145,7 +157,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player)
     {
-        return new GuiMachine(this);
+        return new GuiMachine(this, player);
     }
 
     @Override
@@ -229,9 +241,15 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     }
 
     @Override
+    public boolean hasCustomInventoryName()
+    {
+        return true;
+    }
+
+    @Override
     public String getInventoryName()
     {
-        return "container.chest";
+        return "container." + BasicIndustry.PREFIX + name;
     }
 
     @Override
@@ -247,15 +265,9 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     }
 
     @Override
-    public boolean hasCustomInventoryName()
-    {
-        return false;
-    }
-
-    @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return i >= this.getSizeInventory();
+        return i <= this.getSizeInventory();
     }
 
     @Override
