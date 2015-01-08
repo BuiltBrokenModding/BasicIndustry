@@ -1,7 +1,13 @@
 package com.builtbroken.industry.content;
 
+import com.builtbroken.mc.api.tile.IGuiTile;
+import com.builtbroken.mc.core.Engine;
+import com.builtbroken.mc.core.network.IPacketIDReceiver;
+import com.builtbroken.mc.core.network.packet.PacketTile;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -12,7 +18,7 @@ import net.minecraft.nbt.NBTTagList;
 /** Prefab for electric machines, will move to core when completed
  * Created by robert on 1/7/2015.
  */
-public abstract class TileMachine extends Tile implements ISidedInventory
+public abstract class TileMachine extends Tile implements ISidedInventory, IPacketIDReceiver, IGuiTile
 {
     /**
      * Default slot max count
@@ -27,9 +33,13 @@ public abstract class TileMachine extends Tile implements ISidedInventory
      */
     protected ItemStack[] containedItems;
 
-    public TileMachine(Material material)
+    private boolean enabled = false;
+    private boolean prev_enabled = false;
+
+    public TileMachine(Material material, int inventory_size)
     {
         super(material);
+        this.inventory_size = inventory_size;
     }
 
     @Override
@@ -43,6 +53,51 @@ public abstract class TileMachine extends Tile implements ISidedInventory
         {
             throw new RuntimeException("Failed to make new tile for " + getClass().getName(), e);
         }
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        if(enabled != prev_enabled)
+        {
+            this.enabled = prev_enabled;
+            sendEnabledPacket();
+        }
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void sendEnabledPacket()
+    {
+        Engine.instance.packetHandler.sendToAllAround(new PacketTile(this, 0, enabled), this);
+    }
+
+    @Override
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
+    {
+        if(isClient())
+        {
+            if (id == 0)
+            {
+                this.enabled = buf.readBoolean();
+                return true;
+            }
+        }
+       return false;
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player)
+    {
+        return new ContainerMachine(this);
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player)
+    {
+        return new GuiMachine(this);
     }
 
     @Override
@@ -195,7 +250,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory
     {
         this.clear();
 
-        NBTTagList nbtList = nbt.getTagList("Items", 10);
+        NBTTagList nbtList = nbt.getTagList("Items", 0);
 
         for (int i = 0; i < nbtList.tagCount(); ++i)
         {
