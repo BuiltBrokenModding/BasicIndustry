@@ -5,6 +5,11 @@ import com.builtbroken.mc.lib.mod.AbstractProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +31,7 @@ public class BasicIndustry extends AbstractMod
     public static final String BUILD_VERSION = "@BUILD@";
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION + "." + BUILD_VERSION;
 
-    public static final String ASSETS_PATH = "/assets/icbm/";
+    public static final String ASSETS_PATH = "/assets/"+ DOMAIN + "/";
     public static final String TEXTURE_PATH = "textures/";
     public static final String GUI_PATH = TEXTURE_PATH + "gui/";
     public static final String MODEL_PREFIX = "models/";
@@ -46,6 +51,7 @@ public class BasicIndustry extends AbstractMod
 
     @SidedProxy(clientSide = "com.builtbroken.industry.ClientProxy", serverSide = "com.builtbroken.industry.CommonProxy")
     public static CommonProxy proxy;
+
     public BasicIndustry()
     {
         super(DOMAIN);
@@ -54,6 +60,24 @@ public class BasicIndustry extends AbstractMod
     @Override
     public AbstractProxy getProxy()
     {
-        return null;
+        return proxy;
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        super.preInit(event);
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event)
+    {
+        super.init(event);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        super.postInit(event);
     }
 }
