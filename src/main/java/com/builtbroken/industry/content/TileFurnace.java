@@ -1,9 +1,15 @@
 package com.builtbroken.industry.content;
 
+import com.builtbroken.jlib.data.Colors;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.IIcon;
 
 /**
  * Created by robert on 1/7/2015.
@@ -11,11 +17,12 @@ import net.minecraft.tileentity.TileEntityFurnace;
 public class TileFurnace extends TileMachine
 {
     public int heatLevel = 0;
-    public int cookTime = 0;
 
     public TileFurnace()
     {
         super(Material.iron, 2);
+        this.name = "BasicFurnace";
+        this.max_processing_ticks = 200;
     }
 
     @Override
@@ -24,11 +31,11 @@ public class TileFurnace extends TileMachine
         super.update();
         if (this.canSmelt())
         {
-            ++this.cookTime;
+            ++this.processing_ticks;
 
-            if (this.cookTime == 200)
+            if (this.processing_ticks >= max_processing_ticks)
             {
-                this.cookTime = 0;
+                this.processing_ticks = 0;
                 this.smeltItem();
             }
         }
@@ -94,5 +101,28 @@ public class TileFurnace extends TileMachine
     public boolean canExtractItem(int slot, ItemStack stack, int side)
     {
         return slot == 1;
+    }
+
+
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister iconRegister)
+    {
+
+    }
+
+    @Override
+    public IIcon getIcon(int side)
+    {
+        if(isEnabled())
+        {
+            return Blocks.lit_furnace.getIcon(side, getMetadata());
+        }
+        return Blocks.furnace.getIcon(side, getMetadata());
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getColorMultiplier()
+    {
+        return Colors.DARK_AQUA.toInt();
     }
 }

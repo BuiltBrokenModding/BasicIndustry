@@ -1,7 +1,9 @@
 package com.builtbroken.industry;
 
+import com.builtbroken.industry.content.TileFurnace;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.AbstractProxy;
+import com.builtbroken.mc.lib.mod.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
@@ -9,6 +11,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +70,8 @@ public class BasicIndustry extends AbstractMod
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
+        manager.setTab(new ModCreativeTab(NAME));
+        ((ModCreativeTab)manager.defaultTab).itemStack = new ItemStack(manager.newBlock(TileFurnace.class));
     }
 
     @Mod.EventHandler

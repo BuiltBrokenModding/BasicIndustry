@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+import java.util.Iterator;
+
 /** Prefab for electric machines, will move to core when completed
  * Created by robert on 1/7/2015.
  */
@@ -35,6 +37,9 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
 
     private boolean enabled = false;
     private boolean prev_enabled = false;
+
+    protected int processing_ticks = 0;
+    protected int max_processing_ticks = 0;
 
     public TileMachine(Material material, int inventory_size)
     {
@@ -69,9 +74,45 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
         return enabled;
     }
 
+    public int getProcessorTicks()
+    {
+        return processing_ticks;
+    }
+
+    public int getMaxProcessingTicks()
+    {
+        return max_processing_ticks;
+    }
+
     public void sendEnabledPacket()
     {
         Engine.instance.packetHandler.sendToAllAround(new PacketTile(this, 0, enabled), this);
+    }
+
+    @Override
+    public void doUpdateGuiUsers()
+    {
+        if(ticks % 3 == 0)
+        {
+            sendPacketToGuiUsers(new PacketTile(this, 1, enabled, processing_ticks, max_processing_ticks));
+        }
+    }
+
+    @Override
+    public void doCleanupCheck()
+    {
+        if(getPlayersUsing().size() > 0)
+        {
+            Iterator<EntityPlayer> it = getPlayersUsing().iterator();
+            while (it.hasNext())
+            {
+                EntityPlayer player = it.next();
+                if (!(player.inventoryContainer instanceof ContainerMachine))
+                {
+                    it.remove();
+                }
+            }
+        }
     }
 
     @Override
@@ -84,6 +125,13 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
                 this.enabled = buf.readBoolean();
                 return true;
             }
+            else if(id == 1)
+            {
+                this.enabled = buf.readBoolean();
+                this.processing_ticks = buf.readInt();
+                this.max_processing_ticks = buf.readInt();
+                return true;
+            }
         }
        return false;
     }
@@ -91,7 +139,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
-        return new ContainerMachine(this);
+        return new ContainerMachine(this, player);
     }
 
     @Override
