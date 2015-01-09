@@ -10,11 +10,11 @@ import net.minecraft.inventory.SlotFurnace;
 /**
  * Created by robert on 1/8/2015.
  */
-public class ContainerMachine extends ContainerBase
+public class ContainerTileProcessor extends ContainerBase
 {
-    protected TileMachine machine;
+    protected TileProcessor machine;
 
-    public ContainerMachine(TileMachine machine, EntityPlayer player)
+    public ContainerTileProcessor(TileProcessor machine, EntityPlayer player)
     {
         super(player, machine);
         this.machine = machine;

@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content;
 
-import com.builtbroken.mc.prefab.entity.EntityProjectile;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,14 +9,14 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by robert on 1/8/2015.
  */
-public class GuiMachine extends GuiContainerBase
+public class GuiTileProcessor extends GuiContainerBase
 {
     private static final ResourceLocation furnaceGuiTextures = new ResourceLocation("textures/gui/container/furnace.png");
-    protected TileMachine machine;
+    protected TileProcessor machine;
 
-    public GuiMachine(TileMachine machine, EntityPlayer player)
+    public GuiTileProcessor(TileProcessor machine, EntityPlayer player)
     {
-        super(new ContainerMachine(machine, player));
+        super(new ContainerTileProcessor(machine, player));
         this.machine = machine;
     }
 

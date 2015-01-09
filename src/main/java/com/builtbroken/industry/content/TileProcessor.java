@@ -170,7 +170,7 @@ public abstract class TileProcessor extends TileMachine
             while (it.hasNext())
             {
                 EntityPlayer player = it.next();
-                if (!(player.inventoryContainer instanceof ContainerMachine))
+                if (!(player.inventoryContainer instanceof ContainerTileProcessor))
                 {
                     it.remove();
                 }
@@ -181,13 +181,13 @@ public abstract class TileProcessor extends TileMachine
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
-        return new ContainerMachine(this, player);
+        return new ContainerTileProcessor(this, player);
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player)
     {
-        return new GuiMachine(this, player);
+        return new GuiTileProcessor(this, player);
     }
 
     //==============================
