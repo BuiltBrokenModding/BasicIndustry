@@ -1,6 +1,8 @@
 package com.builtbroken.industry;
 
 import com.builtbroken.industry.content.TileFurnace;
+import com.builtbroken.industry.content.TileOreCrusher;
+import com.builtbroken.industry.content.TileOreGrinder;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.AbstractProxy;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
@@ -72,6 +74,8 @@ public class BasicIndustry extends AbstractMod
         super.preInit(event);
         manager.setTab(new ModCreativeTab(NAME));
         ((ModCreativeTab)manager.defaultTab).itemStack = new ItemStack(manager.newBlock(TileFurnace.class));
+        manager.newBlock(TileOreCrusher.class);
+        manager.newBlock(TileOreGrinder.class);
     }
 
     @Mod.EventHandler

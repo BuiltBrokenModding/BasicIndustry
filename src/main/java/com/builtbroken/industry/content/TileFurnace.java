@@ -53,7 +53,7 @@ public class TileFurnace extends TileProcessor
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side)
     {
-        return slot == 0;
+        return slot == 0 && MachineRecipeType.ITEM_SMELTER.getItemStackRecipe(0, 0, stack) != null;
     }
 
     @Override
