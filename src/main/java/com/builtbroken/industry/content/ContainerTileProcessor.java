@@ -18,7 +18,7 @@ public class ContainerTileProcessor extends ContainerBase
     {
         super(player, machine);
         this.machine = machine;
-        this.addSlotToContainer(new Slot(machine, 0, 56, 17));
+        this.addSlotToContainer(new Slot(machine, 0, 56, 35));
         this.addSlotToContainer(new SlotFurnace(player, machine, 1, 116, 35));
         addPlayerInventory(player);
     }

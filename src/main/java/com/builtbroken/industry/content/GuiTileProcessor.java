@@ -26,9 +26,9 @@ public class GuiTileProcessor extends GuiContainerBase
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
     {
         super.drawGuiContainerForegroundLayer(p_146979_1_, p_146979_2_);
-        String s = this.machine.hasCustomInventoryName() ? this.machine.getInventoryName() : I18n.format(this.machine.getInventoryName(), new Object[0]);
-        this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-        this.fontRendererObj.drawString("Ticks: " + machine.getProcessorTicks(), 8, this.ySize - 50 + 2, 4210752);
+        //String s = this.machine.hasCustomInventoryName() ? this.machine.getInventoryName() : I18n.format(this.machine.getInventoryName(), new Object[0]);
+        //this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+        drawString("Ticks: " + machine.getProcessorTicks(), 8, this.ySize - 35);
     }
 
     @Override
