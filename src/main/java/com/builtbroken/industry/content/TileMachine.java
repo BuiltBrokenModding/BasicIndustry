@@ -6,7 +6,6 @@ import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;
-import com.builtbroken.mc.lib.transform.vector.Vector3;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import io.netty.buffer.ByteBuf;
@@ -17,31 +16,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.Iterator;
-
-/** Prefab for electric machines, will move to core when completed
+/**
+ * Prefab for electric machines, will move to core when completed
  * Created by robert on 1/7/2015.
  */
 public abstract class TileMachine extends Tile implements ISidedInventory, IPacketIDReceiver, IGuiTile
 {
     /**
-     * Default slot max count
+     * Size of the inventory
      */
     protected int inventory_size;
     /**
-     * Access able slots side all
+     * Slots that can be accessed all sides, defaults to all slots
      */
     protected int[] openSlots;
-    /**
-     * Items contained in this inv
-     */
-    protected ItemStack[] containedItems;
 
+    //Vars that are accessed with setters
+    private ItemStack[] containedItems;
     private boolean enabled = false;
     private boolean prev_enabled = false;
+    private OnOffOption onOffOption = OnOffOption.AUTOMATIC;
 
-    protected int processing_ticks = 0;
-    protected int max_processing_ticks = 0;
 
     public TileMachine(Material material, int inventory_size)
     {
@@ -49,117 +44,121 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
         this.inventory_size = inventory_size;
     }
 
+    //==============================
+    //======= Implements ===========
+    //==============================
+
+    /**
+     * Is the machine working, separate check from isOn/isEnabled
+     */
+    protected abstract boolean isWorking();
+
+    //==============================
+    //======= Update Logic =========
+    //==============================
+
+    @Override
+    public void update()
+    {
+        super.update();
+        setEnabled(isWorking() && onOffOption != OnOffOption.ALWAYS_OFF);
+    }
+
+    //==============================
+    //===== Getters & Setters ======
+    //==============================
+
     @Override
     public Tile newTile()
     {
         try
         {
             return this.getClass().newInstance();
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new RuntimeException("Failed to make new tile for " + getClass().getName(), e);
         }
     }
 
+    /**
+     * Sets the machine to be enabled/on
+     */
     public void setEnabled(boolean enabled)
     {
-        if(enabled != prev_enabled)
+        if (enabled != prev_enabled)
         {
             this.enabled = prev_enabled;
             sendEnabledPacket();
         }
     }
 
+    /**
+     * Is the machine enabled/on
+     */
     public boolean isEnabled()
     {
         return enabled;
     }
 
-    public int getProcessorTicks()
+    public void setOnSwitchPosition(OnOffOption onOffOption)
     {
-        return processing_ticks;
+        if (onOffOption != this.onOffOption)
+        {
+            this.onOffOption = onOffOption;
+            if (isServer())
+            {
+
+            }
+        }
     }
 
-    public int getMaxProcessingTicks()
+    public OnOffOption getOnSwitchPosition()
     {
-        return max_processing_ticks;
+        return onOffOption;
     }
+
+    //==============================
+    //======= Packet Code ==========
+    //==============================
 
     public void sendEnabledPacket()
     {
-        Engine.instance.packetHandler.sendToAllAround(new PacketTile(this, 0, enabled), this);
+        Engine.instance.packetHandler.sendToAllAround(new PacketTile(this, 1, isEnabled()), this);
+    }
+
+    public void sendOnSwitchPacket()
+    {
+        Engine.instance.packetHandler.sendToAllAround(new PacketTile(this, 2, getOnSwitchPosition().ordinal()), this);
     }
 
     @Override
-    protected boolean onPlayerRightClick(EntityPlayer player, int side, Vector3 hit)
+    public PacketTile getDescPacket()
     {
-        if(isServer())
-        {
-            openGui(player, BasicIndustry.INSTANCE);
-        }
-        return true;
-    }
-
-    @Override
-    public void doUpdateGuiUsers()
-    {
-        if(ticks % 3 == 0)
-        {
-            sendPacketToGuiUsers(new PacketTile(this, 1, enabled, processing_ticks, max_processing_ticks));
-        }
-    }
-
-    @Override
-    public void doCleanupCheck()
-    {
-        if(getPlayersUsing().size() > 0)
-        {
-            Iterator<EntityPlayer> it = getPlayersUsing().iterator();
-            while (it.hasNext())
-            {
-                EntityPlayer player = it.next();
-                if (!(player.inventoryContainer instanceof ContainerMachine))
-                {
-                    it.remove();
-                }
-            }
-        }
+        return new PacketTile(this, 0, isEnabled(), getOnSwitchPosition().ordinal());
     }
 
     @Override
     public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
     {
-        if(isClient())
+        if (isClient())
         {
-            if (id == 0)
+            if (id == 0 || id == 1 || id == 2)
             {
-                this.enabled = buf.readBoolean();
-                return true;
-            }
-            else if(id == 1)
-            {
-                this.enabled = buf.readBoolean();
-                this.processing_ticks = buf.readInt();
-                this.max_processing_ticks = buf.readInt();
+                if (id == 0 || id == 1)
+                    this.enabled = buf.readBoolean();
+                if (id == 0 || id == 2)
+                    this.setOnSwitchPosition(OnOffOption.get(buf.readInt()));
                 return true;
             }
         }
-       return false;
+        return false;
     }
 
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player)
-    {
-        return new ContainerMachine(this, player);
-    }
+    //==============================
+    //======= Inventory Code =======
+    //==============================
 
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player)
-    {
-        return new GuiMachine(this, player);
-    }
-
+    //TODO move inventory code to its own prefab
     @Override
     public int getSizeInventory()
     {
@@ -349,5 +348,28 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     {
         this.containedItems = null;
         this.getContainedItems();
+    }
+
+    public static enum OnOffOption
+    {
+        /**
+         * Machine turns on when it needs to work, and off when it doesn't
+         */
+        AUTOMATIC,
+        /**
+         * Machine will always be on
+         */
+        ALWAYS_ON,
+        /**
+         * Machine will always be off
+         */
+        ALWAYS_OFF;
+
+        public static OnOffOption get(int i)
+        {
+            if (i >= 0 && i < values().length)
+                return values()[i];
+            return AUTOMATIC;
+        }
     }
 }

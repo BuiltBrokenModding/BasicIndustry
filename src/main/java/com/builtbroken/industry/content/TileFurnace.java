@@ -1,19 +1,19 @@
 package com.builtbroken.industry.content;
 
 import com.builtbroken.jlib.data.Colors;
+import com.builtbroken.mc.api.recipe.MachineRecipeType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.IIcon;
 
 /**
  * Created by robert on 1/7/2015.
  */
-public class TileFurnace extends TileMachine
+public class TileFurnace extends TileProcessor
 {
     public int heatLevel = 0;
 
@@ -28,79 +28,26 @@ public class TileFurnace extends TileMachine
     public void update()
     {
         super.update();
-        if (this.canProcess())
+        if (isProcessing)
         {
-            ++this.processing_ticks;
-
-            if (this.processing_ticks >= max_processing_ticks)
-            {
-                this.processing_ticks = 0;
-                this.processRecipe();
-            }
+            ++heatLevel;
         }
         else if (heatLevel > 0)
         {
             heatLevel--;
         }
-
-        setEnabled(heatLevel > 0);
     }
 
-    /**
-     * Checks if we can smelt the item
-     */
-    protected boolean canProcess()
+    public boolean isWorking()
     {
-        ItemStack itemstack = getRecipe();
-        if (itemstack != null)
-        {
-            ItemStack output = this.getStackInSlot(1);
-
-            if (output == null)
-            {
-                return true;
-            }
-            else if (output.isItemEqual(itemstack) && output.stackSize <= output.getItem().getItemStackLimit(output)) // check for output room
-            {
-                int newStackSize = output.stackSize + itemstack.stackSize; // check if we don't exceed max stack size
-                return newStackSize <= getInventoryStackLimit() && newStackSize <= output.getMaxStackSize();
-            }
-        }
-        return false;
+        return heatLevel > 0;
     }
 
-    /**
-     * Checks if we have a recipe for the input
-     */
+    @Override
     protected ItemStack getRecipe()
     {
-        return this.getStackInSlot(0) != null ? FurnaceRecipes.smelting().getSmeltingResult(this.getStackInSlot(0)) : null;
-    }
-
-    /**
-     * Processes the recipe
-     */
-    protected void processRecipe()
-    {
-        ItemStack output = this.getStackInSlot(1);
-        ItemStack result = getRecipe();
-
-        //Increase output stack size
-        if (output == null)
-        {
-            this.setInventorySlotContents(1, result.copy());
-        }
-        else if (output.getItem() == result.getItem())
-        {
-            output.stackSize += result.stackSize;
-        }
-
-        //Decrease input stack size
-        --this.getStackInSlot(0).stackSize;
-        if (this.getStackInSlot(0).stackSize <= 0)
-        {
-            this.setInventorySlotContents(0, null);
-        }
+        //FurnaceRecipes.smelting().getSmeltingResult(this.getStackInSlot(0))
+        return getStackInSlot(0) != null ? MachineRecipeType.ITEM_SMELTER.getItemStackRecipe(0, 0, getStackInSlot(0)) : null;
     }
 
     @Override
