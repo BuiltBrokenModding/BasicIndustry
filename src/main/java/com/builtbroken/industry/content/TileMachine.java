@@ -310,7 +310,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
         super.readFromNBT(nbt);
         this.clear();
 
-        NBTTagList nbtList = nbt.getTagList("Items", 0);
+        NBTTagList nbtList = nbt.getTagList("Items", 10);
 
         for (int i = 0; i < nbtList.tagCount(); ++i)
         {
@@ -322,8 +322,6 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
                 this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(stackTag));
             }
         }
-
-        nbt.setTag("Items", nbtList);
     }
 
     @Override

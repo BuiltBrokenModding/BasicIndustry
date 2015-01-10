@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Iterator;
 
@@ -29,11 +30,6 @@ public abstract class TileProcessor extends TileMachine
      * How many ticks until processing is done
      */
     protected int max_processing_ticks = 0;
-
-    public TileProcessor(Material material)
-    {
-        super(material, 2);
-    }
 
     public TileProcessor(Material material, int inventory_size)
     {
@@ -130,6 +126,20 @@ public abstract class TileProcessor extends TileMachine
         {
             this.setInventorySlotContents(0, null);
         }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        nbt.setInteger("processingTicks", getProcessorTicks());
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        processing_ticks = nbt.getInteger("processingTicks");
     }
 
     //==============================
