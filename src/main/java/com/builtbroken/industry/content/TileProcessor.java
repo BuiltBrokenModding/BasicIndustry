@@ -67,17 +67,20 @@ public abstract class TileProcessor extends TileMachine
     public void update()
     {
         super.update();
-        this.isProcessing = this.canProcess();
-        if (isProcessing)
+        if(isServer())
         {
-            ++this.processing_ticks;
-            if (this.processing_ticks >= max_processing_ticks)
+            this.isProcessing = this.canProcess();
+            if (isProcessing)
             {
-                this.processing_ticks = 0;
-                this.processRecipe();
+                ++this.processing_ticks;
+                if (this.processing_ticks >= max_processing_ticks)
+                {
+                    this.processing_ticks = 0;
+                    this.processRecipe();
+                }
             }
+            setEnabled(isWorking());
         }
-        setEnabled(isWorking());
     }
 
     /**

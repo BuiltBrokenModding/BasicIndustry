@@ -107,7 +107,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
             this.onOffOption = onOffOption;
             if (isServer())
             {
-
+                sendOnSwitchPacket();
             }
         }
     }
@@ -307,6 +307,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
+        super.readFromNBT(nbt);
         this.clear();
 
         NBTTagList nbtList = nbt.getTagList("Items", 0);
@@ -328,6 +329,7 @@ public abstract class TileMachine extends Tile implements ISidedInventory, IPack
     @Override
     public void writeToNBT(NBTTagCompound nbt)
     {
+        super.writeToNBT(nbt);
         NBTTagList nbtList = new NBTTagList();
 
         for (int i = 0; i < this.getSizeInventory(); ++i)
