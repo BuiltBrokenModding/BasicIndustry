@@ -3,7 +3,7 @@ package com.builtbroken.industry.content;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;
-import com.builtbroken.mc.lib.transform.vector.Vector3;
+import com.builtbroken.mc.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +50,7 @@ public abstract class TileProcessor extends TileMachine
     //==============================
 
     @Override
-    protected boolean onPlayerRightClick(EntityPlayer player, int side, Vector3 hit)
+    protected boolean onPlayerRightClick(EntityPlayer player, int side, Pos hit)
     {
         if (isServer())
         {
