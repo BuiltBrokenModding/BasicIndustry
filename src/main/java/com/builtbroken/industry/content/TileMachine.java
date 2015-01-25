@@ -6,6 +6,7 @@ import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.AbstractPacket;
 import com.builtbroken.mc.core.network.packet.PacketTile;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
@@ -128,7 +129,7 @@ public abstract class TileMachine extends TileModuleMachine implements IPacketID
     }
 
     @Override
-    public boolean read(ByteBuf buf, int id, EntityPlayer player, AbstractPacket type)
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
     {
         if (isClient())
         {

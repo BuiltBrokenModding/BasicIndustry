@@ -3,6 +3,7 @@ package com.builtbroken.industry.content;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.core.network.packet.AbstractPacket;
 import com.builtbroken.mc.core.network.packet.PacketTile;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
@@ -147,7 +148,7 @@ public abstract class TileProcessor extends TileMachine
     //==============================
 
     @Override
-    public boolean read(ByteBuf buf, int id, EntityPlayer player, AbstractPacket type)
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
     {
         if (isClient() && !super.read(buf, id, player, type))
         {
