@@ -1,7 +1,6 @@
-package com.builtbroken.industry.content;
+package com.builtbroken.industry.content.prefab;
 
 import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.mc.core.network.packet.AbstractPacket;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.lib.transform.vector.Pos;

@@ -1,5 +1,6 @@
 package com.builtbroken.industry.content;
 
+import com.builtbroken.industry.content.prefab.TileProcessor;
 import com.builtbroken.jlib.data.Colors;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;
 import cpw.mods.fml.relauncher.Side;

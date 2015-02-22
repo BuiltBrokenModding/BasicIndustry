@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content;
+package com.builtbroken.industry.content.prefab;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.api.tile.IGuiTile;

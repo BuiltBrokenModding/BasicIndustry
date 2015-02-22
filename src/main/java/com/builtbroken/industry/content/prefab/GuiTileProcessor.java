@@ -1,13 +1,7 @@
-package com.builtbroken.industry.content;
+package com.builtbroken.industry.content.prefab;
 
-import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.mc.core.References;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by robert on 1/8/2015.
