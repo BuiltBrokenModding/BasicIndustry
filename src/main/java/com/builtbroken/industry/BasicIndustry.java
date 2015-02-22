@@ -1,8 +1,8 @@
 package com.builtbroken.industry;
 
-import com.builtbroken.industry.content.TileFurnace;
-import com.builtbroken.industry.content.TileOreCrusher;
-import com.builtbroken.industry.content.TileOreGrinder;
+import com.builtbroken.industry.content.machines.TileFurnace;
+import com.builtbroken.industry.content.machines.TileOreCrusher;
+import com.builtbroken.industry.content.machines.TileOreGrinder;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.AbstractProxy;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
@@ -12,9 +12,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

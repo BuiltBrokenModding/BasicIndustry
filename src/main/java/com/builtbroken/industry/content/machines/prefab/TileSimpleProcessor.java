@@ -1,8 +1,8 @@
-package com.builtbroken.industry.content;
+package com.builtbroken.industry.content.machines.prefab;
 
-import com.builtbroken.industry.content.prefab.TileProcessor;
 import com.builtbroken.jlib.data.Colors;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;
+import com.builtbroken.mc.prefab.recipe.MachineRecipe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -12,17 +12,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 /**
- * Created by robert on 1/7/2015.
+ * Created by robert on 2/22/2015.
  */
-public class TileFurnace extends TileProcessor
+public class TileSimpleProcessor extends TileProcessor
 {
-    public int heatLevel = 0;
+    public int spinUpTime;
+    public final MachineRecipeType type;
 
-    public TileFurnace()
+    public TileSimpleProcessor(String name, MachineRecipeType type, int slots)
     {
-        super(Material.iron, 2);
-        this.name = "BasicFurnace";
-        this.max_processing_ticks = 200;
+        super(Material.iron, slots);
+        this.type = type;
+        this.name = name;
+        this.max_processing_ticks = 400;
+    }
+
+    @Override
+    protected ItemStack getRecipe()
+    {
+        return getStackInSlot(0) != null ? type.getItemStackRecipe(0, 0, getStackInSlot(0)) : null;
     }
 
     @Override
@@ -31,30 +39,24 @@ public class TileFurnace extends TileProcessor
         super.update();
         if (isProcessing)
         {
-            ++heatLevel;
+            ++spinUpTime;
         }
-        else if (heatLevel > 0)
+        else if (spinUpTime > 0)
         {
-            heatLevel--;
+            spinUpTime--;
         }
-    }
-
-    public boolean isWorking()
-    {
-        return heatLevel > 0;
     }
 
     @Override
-    protected ItemStack getRecipe()
+    protected boolean isWorking()
     {
-        //FurnaceRecipes.smelting().getSmeltingResult(this.getStackInSlot(0))
-        return getStackInSlot(0) != null ? MachineRecipeType.ITEM_SMELTER.getItemStackRecipe(0, 0, getStackInSlot(0)) : null;
+        return spinUpTime > 0;
     }
 
     @Override
     public boolean canInsertItem(int slot, ItemStack stack, int side)
     {
-        return slot == 0 && MachineRecipeType.ITEM_SMELTER.getItemStackRecipe(0, 0, stack) != null;
+        return slot == 0 && type.getItemStackRecipe(0, 0, stack) != null;
     }
 
     @Override
@@ -62,7 +64,6 @@ public class TileFurnace extends TileProcessor
     {
         return slot == 1;
     }
-
 
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister iconRegister)
@@ -83,6 +84,6 @@ public class TileFurnace extends TileProcessor
     @SideOnly(Side.CLIENT)
     public int getColorMultiplier()
     {
-        return Colors.DARK_AQUA.toInt();
+        return Colors.YELLOW.toInt();
     }
 }

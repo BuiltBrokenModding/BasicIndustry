@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.prefab;
+package com.builtbroken.industry.content.machines.prefab;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.core.network.packet.PacketTile;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 /** Machine that can process one( or more) items into an output recipe
  * Created by robert on 1/9/2015.
  */
-public abstract class TileProcessor extends TileMachine
+public abstract class TileProcessor extends com.builtbroken.industry.content.machines.prefab.TileMachine
 {
     /**
      * Is the machine currently processing
@@ -183,7 +183,7 @@ public abstract class TileProcessor extends TileMachine
             while (it.hasNext())
             {
                 EntityPlayer player = it.next();
-                if (!(player.inventoryContainer instanceof ContainerTileProcessor))
+                if (!(player.inventoryContainer instanceof com.builtbroken.industry.content.machines.prefab.ContainerTileProcessor))
                 {
                     it.remove();
                 }
@@ -194,13 +194,13 @@ public abstract class TileProcessor extends TileMachine
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
-        return new ContainerTileProcessor(this, player);
+        return new com.builtbroken.industry.content.machines.prefab.ContainerTileProcessor(this, player);
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player)
     {
-        return new GuiTileProcessor(this, player);
+        return new com.builtbroken.industry.content.machines.prefab.GuiTileProcessor(this, player);
     }
 
     //==============================

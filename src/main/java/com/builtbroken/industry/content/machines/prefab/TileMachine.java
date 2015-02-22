@@ -1,22 +1,16 @@
-package com.builtbroken.industry.content.prefab;
+package com.builtbroken.industry.content.machines.prefab;
 
-import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
-import com.builtbroken.mc.core.network.packet.AbstractPacket;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;
-import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 /**
  * Prefab for electric machines, will move to core when completed
