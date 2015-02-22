@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content.machines.prefab;
 
-import com.builtbroken.industry.content.machines.TileProcessor;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
 
