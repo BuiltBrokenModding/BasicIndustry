@@ -57,7 +57,7 @@ public class BasicIndustry extends AbstractMod
 
     public BasicIndustry()
     {
-        super(DOMAIN);
+        super(DOMAIN, "BasicIndustry");
     }
 
     @Override
