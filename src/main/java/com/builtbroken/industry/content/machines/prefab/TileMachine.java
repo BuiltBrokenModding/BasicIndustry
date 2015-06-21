@@ -153,7 +153,7 @@ public abstract class TileMachine extends TileModuleMachine implements IPacketID
         nbt.setInteger("onOffState", onOffOption.ordinal());
     }
 
-    public static enum OnOffOption
+    public enum OnOffOption
     {
         /**
          * Machine turns on when it needs to work, and off when it doesn't

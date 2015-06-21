@@ -2,7 +2,7 @@ package com.builtbroken.industry.content.machines.gen;
 
 import com.builtbroken.industry.content.machines.gen.prefabs.TGSolidFuel;
 import com.builtbroken.mc.api.energy.IEnergyCapacitor;
-import com.builtbroken.mc.prefab.recipe.ItemStackWrapper;
+import com.builtbroken.mc.prefab.items.ItemStackWrapper;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;

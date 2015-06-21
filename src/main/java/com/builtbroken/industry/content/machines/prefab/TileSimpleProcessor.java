@@ -2,7 +2,6 @@ package com.builtbroken.industry.content.machines.prefab;
 
 import com.builtbroken.jlib.data.Colors;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;
-import com.builtbroken.mc.prefab.recipe.MachineRecipe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;

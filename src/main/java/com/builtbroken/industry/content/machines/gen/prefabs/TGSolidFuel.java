@@ -1,11 +1,8 @@
 package com.builtbroken.industry.content.machines.gen.prefabs;
 
-import com.builtbroken.mc.prefab.recipe.ItemStackWrapper;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.HashMap;
 
 /**
  * Created by robert on 3/8/2015.
