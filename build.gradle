@@ -31,14 +31,44 @@ println "Current Minecraft version = " + minecraft.apiVersion
 def currentJvm = org.gradle.internal.jvm.Jvm.current()
 println "Current Java version = " + currentJvm
 
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		//include '**/*.lang'
+		include '**/*.info'
+		include '**/*.properties'
+
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+		// replace version and MCVersion
+	}
+    
+
+	// copy everything else, thats not text
+	from(sourceSets.main.resources.srcDirs) {
+		exclude '**/*.info'
+		exclude '**/*.properties'
+	}
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+minecraft {    
+    replace "required-after:VoltzEngine", "required-after:VoltzEngine" + voltz_engine_version
+}
+
 dependencies 
 {
     if (project.getProperty("bambooshortPlanName") == "BBM-Dev"){
-    compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-0.+:deobf-dev"
+    compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-0.6.2+:deobf-dev"
     }
     else
     {
-    compile "com.builtbroken.voltzengine:VoltzEngine:1.7.10-0.+:deobf"}
+    compile "com.builtbroken.voltzengine:VoltzEngine:1.7.10-0.6.2+:deobf"}
     testRuntime 'org.slf4j:slf4j-simple:1.7.10'
 }
 
