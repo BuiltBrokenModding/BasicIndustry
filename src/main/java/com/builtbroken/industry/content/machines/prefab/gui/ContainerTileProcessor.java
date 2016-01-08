@@ -1,5 +1,6 @@
-package com.builtbroken.industry.content.machines.prefab;
+package com.builtbroken.industry.content.machines.prefab.gui;
 
+import com.builtbroken.industry.content.machines.prefab.TileProcessor;
 import com.builtbroken.mc.prefab.gui.ContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -8,6 +9,7 @@ import net.minecraft.inventory.SlotFurnace;
 /**
  * Created by robert on 1/8/2015.
  */
+@Deprecated
 public class ContainerTileProcessor extends ContainerBase
 {
     protected TileProcessor machine;

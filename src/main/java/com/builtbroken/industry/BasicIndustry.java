@@ -1,23 +1,22 @@
 package com.builtbroken.industry;
 
-import com.builtbroken.industry.content.machines.TileFurnace;
-import com.builtbroken.industry.content.machines.TileOreCrusher;
-import com.builtbroken.industry.content.machines.TileOreGrinder;
+import com.builtbroken.industry.content.Content;
+import com.builtbroken.industry.content.machines.tests.TileFurnace;
+import com.builtbroken.industry.content.machines.tests.TileOreCrusher;
+import com.builtbroken.industry.content.machines.tests.TileOreGrinder;
 import com.builtbroken.mc.lib.mod.AbstractMod;
-import com.builtbroken.mc.lib.mod.AbstractProxy;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.item.ItemStack;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
- * Created by robert on 1/7/2015.
+ * Simple industry mod with an interesting take on machines.
+ * <p/>
+ * Created by Dark(robert, DarkGuardsman) on 1/7/2015.
  */
 @Mod(modid = BasicIndustry.DOMAIN, name = BasicIndustry.NAME, version = BasicIndustry.VERSION, dependencies = "required-after:VoltzEngine")
 public class BasicIndustry extends AbstractMod
@@ -34,23 +33,8 @@ public class BasicIndustry extends AbstractMod
     public static final String BUILD_VERSION = "@BUILD@";
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION + "." + BUILD_VERSION;
 
-    public static final String ASSETS_PATH = "/assets/"+ DOMAIN + "/";
-    public static final String TEXTURE_PATH = "textures/";
-    public static final String GUI_PATH = TEXTURE_PATH + "gui/";
-    public static final String MODEL_PREFIX = "models/";
-    public static final String MODEL_DIRECTORY = ASSETS_PATH + MODEL_PREFIX;
-
-    public static final String MODEL_TEXTURE_PATH = TEXTURE_PATH + MODEL_PREFIX;
-    public static final String BLOCK_PATH = TEXTURE_PATH + "blocks/";
-    public static final String ITEM_PATH = TEXTURE_PATH + "items/";
-
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
-
     @Mod.Instance(DOMAIN)
     public static BasicIndustry INSTANCE;
-
-    @Mod.Metadata(DOMAIN)
-    public static ModMetadata metadata;
 
     @SidedProxy(clientSide = "com.builtbroken.industry.ClientProxy", serverSide = "com.builtbroken.industry.CommonProxy")
     public static CommonProxy proxy;
@@ -60,31 +44,41 @@ public class BasicIndustry extends AbstractMod
         super(DOMAIN, "BasicIndustry");
     }
 
-    @Override
-    public AbstractProxy getProxy()
-    {
-        return proxy;
-    }
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
+
+        //Register content
+        Content.testFurnace = manager.newBlock(TileFurnace.class);
+        Content.testCrusher = manager.newBlock(TileOreCrusher.class);
+        Content.testGrinder = manager.newBlock(TileOreGrinder.class);
+
+        //Creative tab
         manager.setTab(new ModCreativeTab(NAME));
-        ((ModCreativeTab)manager.defaultTab).itemStack = new ItemStack(manager.newBlock(TileFurnace.class));
-        manager.newBlock(TileOreCrusher.class);
-        manager.newBlock(TileOreGrinder.class);
+        ((ModCreativeTab) manager.defaultTab).itemStack = new ItemStack(Content.testFurnace);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+
+        //Load mod dependent content
+        //Register entities
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
+
+        //TODO do recipes
+    }
+
+    @Override
+    public CommonProxy getProxy()
+    {
+        return proxy;
     }
 }

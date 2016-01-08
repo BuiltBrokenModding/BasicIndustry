@@ -13,6 +13,7 @@ import net.minecraft.util.IIcon;
 /**
  * Created by robert on 2/22/2015.
  */
+@Deprecated
 public class TileSimpleProcessor extends TileProcessor
 {
     public int spinUpTime;

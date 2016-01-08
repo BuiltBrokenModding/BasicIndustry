@@ -16,14 +16,15 @@ import net.minecraft.nbt.NBTTagCompound;
  * Prefab for electric machines, will move to core when completed
  * Created by robert on 1/7/2015.
  */
-public abstract class TileMachine extends TileModuleMachine implements IPacketIDReceiver, IGuiTile
+@Deprecated
+public abstract class TileSimpleMachine extends TileModuleMachine implements IPacketIDReceiver, IGuiTile
 {
     private boolean enabled = false;
     private boolean prev_enabled = false;
     private OnOffOption onOffOption = OnOffOption.AUTOMATIC;
 
 
-    public TileMachine(Material material, int inventory_size)
+    public TileSimpleMachine(Material material, int inventory_size)
     {
         super("", material);
         this.addInventoryModule(inventory_size);

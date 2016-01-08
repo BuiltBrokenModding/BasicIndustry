@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines;
+package com.builtbroken.industry.content.machines.tests;
 
 import com.builtbroken.industry.content.machines.prefab.TileSimpleProcessor;
 import com.builtbroken.jlib.data.Colors;

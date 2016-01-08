@@ -1,11 +1,13 @@
-package com.builtbroken.industry.content.machines.prefab;
+package com.builtbroken.industry.content.machines.prefab.gui;
 
+import com.builtbroken.industry.content.machines.prefab.TileProcessor;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by robert on 1/8/2015.
  */
+@Deprecated
 public class GuiTileProcessor extends GuiContainerBase
 {
     protected TileProcessor machine;
