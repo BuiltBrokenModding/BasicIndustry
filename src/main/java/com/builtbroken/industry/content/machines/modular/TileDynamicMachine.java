@@ -1,8 +1,12 @@
 package com.builtbroken.industry.content.machines.modular;
 
+import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
+import com.builtbroken.mc.api.tile.ITileModuleProvider;
+import com.builtbroken.mc.api.tile.node.ITileModule;
 import com.builtbroken.mc.prefab.tile.TileEnt;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * A machine that can be modified, reconfigured, and changed by the user at any time. This allows the machine to be multi-rolled as a grinder, crusher, smelter, etc.
@@ -10,11 +14,14 @@ import net.minecraft.nbt.NBTTagCompound;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/8/2016.
  */
-public class TileDynamicMachine extends TileEnt
+public class TileDynamicMachine extends TileEnt implements ITileModuleProvider
 {
-    public TileDynamicMachine(String name, Material material)
+    protected MachineModule machineCore;
+
+    public TileDynamicMachine()
     {
-        super(name, material);
+        super("dynamicMachine", Material.iron);
+        this.itemBlock = ItemBlockDynamicMachine.class;
     }
 
     @Override
@@ -50,6 +57,12 @@ public class TileDynamicMachine extends TileEnt
     public void readMachineNBT(NBTTagCompound nbt)
     {
 
+    }
+
+    @Override
+    public <N extends ITileModule> N getModule(Class<? extends N> nodeType, ForgeDirection from)
+    {
+        return null;
     }
 }
 

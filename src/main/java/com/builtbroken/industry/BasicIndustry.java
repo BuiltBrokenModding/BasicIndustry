@@ -1,11 +1,15 @@
 package com.builtbroken.industry;
 
 import com.builtbroken.industry.content.Content;
+import com.builtbroken.industry.content.blocks.BlockIronMachineParts;
+import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.tests.TileFurnace;
 import com.builtbroken.industry.content.machines.tests.TileOreCrusher;
 import com.builtbroken.industry.content.machines.tests.TileOreGrinder;
+import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
+import com.builtbroken.mc.prefab.tile.item.ItemBlockMetadata;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -50,9 +54,14 @@ public class BasicIndustry extends AbstractMod
         super.preInit(event);
 
         //Register content
-        Content.testFurnace = manager.newBlock(TileFurnace.class);
-        Content.testCrusher = manager.newBlock(TileOreCrusher.class);
-        Content.testGrinder = manager.newBlock(TileOreGrinder.class);
+        if (Engine.runningAsDev)
+        {
+            Content.testFurnace = manager.newBlock(TileFurnace.class);
+            Content.testCrusher = manager.newBlock(TileOreCrusher.class);
+            Content.testGrinder = manager.newBlock(TileOreGrinder.class);
+        }
+        Content.testGrinder = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
+        Content.blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
 
         //Creative tab
         manager.setTab(new ModCreativeTab(NAME));
