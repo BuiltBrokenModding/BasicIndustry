@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TileDynamicMachine extends TileEnt implements ITileModuleProvider
 {
+    /** The machine */
     protected MachineModule machineCore;
 
     public TileDynamicMachine()

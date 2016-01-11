@@ -5,7 +5,10 @@ import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.mc.api.ISave;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.List;
 
 /**
  * Prefab for any machine module, eg Grinder core.
@@ -16,11 +19,13 @@ import net.minecraft.nbt.NBTTagCompound;
 public class MachineModule implements ITileModule, ISave
 {
     /** Host of the module */
-    protected final TileDynamicMachine machine;
+    protected final TileDynamicMachine machine; //TODO replace with interface
     /** Name of the module */
     protected final String moduleName;
     /** Translation key used for item and inventory */
     protected String unlocalizedName;
+    /** Module as an itemstack */
+    protected ItemStack selfAsStack;
 
     /**
      * Default constructor
@@ -37,19 +42,21 @@ public class MachineModule implements ITileModule, ISave
     @Override
     public void onJoinWorld()
     {
-
+        //TODO register any events
+        //TODO connect to grids
     }
 
     @Override
     public void onParentChange()
     {
-
+        //TODO update cache data
     }
 
     @Override
     public void onLeaveWorld()
     {
-
+        //TODO pop connections to any grids
+        //TODO remove event entries
     }
 
     @Override
@@ -68,5 +75,30 @@ public class MachineModule implements ITileModule, ISave
     public NBTTagCompound save(NBTTagCompound nbt)
     {
         return nbt;
+    }
+
+    /**
+     * Gets all items contained in this module including
+     * the module itself as an item. Mainly used to drop
+     * the modules from a machine when broken.
+     *
+     * @param items - list of items
+     */
+    public void getContainedItems(final List<ItemStack> items)
+    {
+        if (selfAsStack != null)
+        {
+            items.add(selfAsStack.copy());
+        }
+    }
+
+    /**
+     * Returns the module as an item
+     *
+     * @return new ItemStack(module)
+     */
+    public ItemStack toItemStack()
+    {
+        return selfAsStack != null ? selfAsStack.copy() : null;
     }
 }
