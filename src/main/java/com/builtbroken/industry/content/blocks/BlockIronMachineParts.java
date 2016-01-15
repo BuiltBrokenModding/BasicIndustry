@@ -15,7 +15,7 @@ import net.minecraft.util.IIcon;
  */
 public class BlockIronMachineParts extends Block
 {
-    protected BlockIronMachineParts()
+    public BlockIronMachineParts()
     {
         super(Material.iron);
         this.setBlockName(BasicIndustry.PREFIX + "ironMachinePart");

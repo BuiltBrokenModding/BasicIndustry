@@ -9,7 +9,7 @@ import net.minecraft.block.material.Material;
  */
 public class BlockStoneMachineParts extends Block
 {
-    protected BlockStoneMachineParts()
+    public BlockStoneMachineParts()
     {
         super(Material.rock);
     }

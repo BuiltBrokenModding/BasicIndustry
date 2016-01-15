@@ -9,7 +9,7 @@ import net.minecraft.block.material.Material;
  */
 public class BlockWoodMachineParts extends Block
 {
-    protected BlockWoodMachineParts()
+    public BlockWoodMachineParts()
     {
         super(Material.wood);
     }
