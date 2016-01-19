@@ -15,9 +15,11 @@ import net.minecraft.util.IIcon;
  */
 public class BlockIronMachineParts extends Block
 {
+
     public BlockIronMachineParts()
     {
         super(Material.iron);
+        this.isOpaqueCube();
         this.setBlockName(BasicIndustry.PREFIX + "ironMachinePart");
     }
 
@@ -42,6 +44,12 @@ public class BlockIronMachineParts extends Block
         return Blocks.iron_bars.getIcon(side, meta);
     }
 
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
+
     public enum IronMachineBlocks
     {
         MACHINE_CASING("casing_iron");
@@ -53,5 +61,7 @@ public class BlockIronMachineParts extends Block
         {
             this.textureName = name;
         }
+
     }
+
 }
