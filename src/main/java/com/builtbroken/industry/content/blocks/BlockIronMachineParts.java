@@ -19,7 +19,6 @@ public class BlockIronMachineParts extends Block
     public BlockIronMachineParts()
     {
         super(Material.iron);
-        this.isOpaqueCube();
         this.setBlockName(BasicIndustry.PREFIX + "ironMachinePart");
     }
 
