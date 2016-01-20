@@ -16,6 +16,7 @@ public class Content
     //Blocks
     public static Block tileDynamicMachine;
     public static Block blockIronMachineParts;
+    public static Block blockScaffold;
 
     //Items
 }
