@@ -47,15 +47,45 @@ public class BlockScaffold extends Block
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z)
     {
-        //TODO path down to see how high we are stacked
-        //TODO add stack limits to each tier
-        return canBlockStay(world, x, y, z);
+        if (canBlockStay(world, x, y, z))
+        {
+            //TODO allow stronger scaffolds at bottom to extend
+            //low tier build height. In other words weak scaffolds at top
+            //strong scaffolds at the bottom.
+
+            final int meta = world.getBlockMetadata(x, y, z);
+            final int max = ScaffoldBlocks.getMaxScaffolds(meta);
+
+            int blocks = 0;
+            int yDelta = -1;
+
+            while (blocks < max)
+            {
+                final Block block = world.getBlock(x, y + yDelta, z);
+                final int blockMeta = world.getBlockMetadata(x, y + yDelta, z);
+                if (block != this)
+                {
+                    break;
+                }
+                if (blockMeta != meta)
+                {
+                    //TODO add error output for not supporting stacking different materials
+                    return false;
+                }
+                y--;
+                blocks++;
+            }
+            //TODO add sound effect of breaking wood if too tall
+            //TODO add chance to break lowest block if too tall
+            return blocks < max;
+        }
+        return false;
     }
 
     @Override
     public boolean canBlockStay(World world, int x, int y, int z)
     {
-        return world.isSideSolid(x - 1, y, z, ForgeDirection.DOWN);
+        return world.isSideSolid(x, y - 1, z, ForgeDirection.UP);
     }
 
     @Override
@@ -135,16 +165,34 @@ public class BlockScaffold extends Block
     public enum ScaffoldBlocks
     {
         /** Lowest tier version */
-        SCAFFOLD_BLOCK("casing_wood");
+        SCAFFOLD_BLOCK("casing_wood", 15);
 
         /** Tile icon. */
         protected IIcon icon;
         /** Texture name. */
         protected final String textureName;
+        /** Max stacked scaffold blocks. */
+        protected final int maxScaffolds;
 
-        ScaffoldBlocks(String name)
+        ScaffoldBlocks(String name, int max)
         {
             this.textureName = name;
+            this.maxScaffolds = max;
+        }
+
+        /**
+         * Max number of scaffolds that can be stacked without breaking.
+         *
+         * @param meta - meta value, between 0 - 15, checked
+         * @return max number of stacked blocks, or 10 for default value
+         */
+        public static int getMaxScaffolds(int meta)
+        {
+            if (meta >= 0 && meta < values().length)
+            {
+                return values()[meta].maxScaffolds;
+            }
+            return 10;
         }
     }
 }
