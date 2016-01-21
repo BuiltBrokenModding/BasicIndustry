@@ -24,14 +24,13 @@ import java.util.List;
  * Full block sized latter used for easy navigation around multi-block structures.
  * Created by Green on 1/19/2016.
  */
-public class BlockScaffold extends BlockLadder
+public class BlockScaffold extends Block
 {
     public BlockScaffold()
     {
-        super();
+        super(Material.circuits);
         this.setBlockName(BasicIndustry.PREFIX + "scaffold");
         this.setHardness(2f);
-        this.setBlockBounds(0.1f, 0f, 0.1f, .9f, 1f, .9f);
     }
 
     @Override
@@ -113,7 +112,7 @@ public class BlockScaffold extends BlockLadder
     public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
     {
         //Wooden scaffold
-        if (world.getBlockMetadata(x, y, z) == ScaffoldBlocks.SCAFFOLD_BLOCK.ordinal())
+        if (world.getBlockMetadata(x, y, z) == ScaffoldBlocks.SCAFFOLD_WOOD.ordinal())
         {
             return 10;
         }
@@ -124,7 +123,7 @@ public class BlockScaffold extends BlockLadder
     public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
     {
         //Wooden scaffold
-        if (world.getBlockMetadata(x, y, z) == ScaffoldBlocks.SCAFFOLD_BLOCK.ordinal())
+        if (world.getBlockMetadata(x, y, z) == ScaffoldBlocks.SCAFFOLD_WOOD.ordinal())
         {
             return 20;
         }
@@ -167,8 +166,15 @@ public class BlockScaffold extends BlockLadder
      */
     public enum ScaffoldBlocks
     {
-        /** Lowest tier version */
-        SCAFFOLD_BLOCK("casing_wood", 15);
+        /** Lowest too highest tier versions */
+        SCAFFOLD_WOOD("casing_wood", 10),
+        SCAFFOLD_WOOD_2("casing_wood", 15),
+        SCAFFOLD_STONE("casing_stone", 10),
+        SCAFFOLD_COPPER("casing_copper", 20),
+        SCAFFOLD_BRONZE("casing_bronze", 25),
+        SCAFFOLD_IRON("casing_iron", 30),
+        SCAFFOLD_STEEL("casing_steel", 35),
+        SCAFFOLD_ALUM("casing_alum", 40);
 
         /** Tile icon. */
         protected IIcon icon;
