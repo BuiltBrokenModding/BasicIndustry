@@ -2,6 +2,7 @@ package com.builtbroken.industry;
 
 import com.builtbroken.industry.content.Content;
 import com.builtbroken.industry.content.blocks.BlockIronMachineParts;
+import com.builtbroken.industry.content.blocks.BlockLadderBI;
 import com.builtbroken.industry.content.blocks.BlockScaffold;
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.tests.TileFurnace;
@@ -68,6 +69,7 @@ public class BasicIndustry extends AbstractMod
         Content.testGrinder = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
         Content.blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
         Content.blockScaffold = manager.newBlock("ScaffoldBlock", BlockScaffold.class, ItemBlockMetadata.class);
+        Content.blockLadderBI = manager.newBlock("Ladder", BlockLadderBI.class, ItemBlockMetadata.class);
     }
 
     @Mod.EventHandler
