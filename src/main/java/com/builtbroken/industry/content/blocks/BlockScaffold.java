@@ -155,7 +155,7 @@ public class BlockScaffold extends Block
     {
         for (int i = 0; i < ScaffoldBlocks.values().length; i++)
         {
-            items.add(new ItemStack(item, 0, i));
+            items.add(new ItemStack(item, 1, i));
         }
     }
 
