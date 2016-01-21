@@ -12,12 +12,11 @@ import java.util.Random;
 import static net.minecraftforge.common.util.ForgeDirection.*;
 
 /**
- * Metallic version of the vanilla latter
+ * Metallic version of the vanilla ladder
  * Created by Green on 1/20/2016.
  */
 public class BlockLadderBI extends Block
 {
-    private static final String __OBFID = "CL_00000262";
 
     public BlockLadderBI()
     {
