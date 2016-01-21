@@ -1,24 +1,25 @@
 package com.builtbroken.industry.content.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 import static net.minecraftforge.common.util.ForgeDirection.*;
 
+/**
+ * Metallic version of the vanilla latter
+ * Created by Green on 1/20/2016.
+ */
 public class BlockLadderBI extends Block
 {
     private static final String __OBFID = "CL_00000262";
 
-    BlockLadderBI()
+    public BlockLadderBI()
     {
         super(Material.circuits);
     }
@@ -52,6 +53,7 @@ public class BlockLadderBI extends Block
         this.setBlockBoundsBasedOnState(world, x, y, z);
         return super.getSelectedBoundingBoxFromPool(world, x, y, z);
     }
+
     public void Bounds(int arg)
     {
         float f = 0.125F;
@@ -111,8 +113,8 @@ public class BlockLadderBI extends Block
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z)
     {
-        return world.isSideSolid(x - 1, y, z, EAST ) ||
-                world.isSideSolid(x + 1, y, z, WEST ) ||
+        return world.isSideSolid(x - 1, y, z, EAST) ||
+                world.isSideSolid(x + 1, y, z, WEST) ||
                 world.isSideSolid(x, y, z - 1, SOUTH) ||
                 world.isSideSolid(x, y, z + 1, NORTH);
     }
