@@ -1,9 +1,11 @@
 package com.builtbroken.industry.content.blocks;
 
 import com.builtbroken.industry.BasicIndustry;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLadder;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,13 +24,14 @@ import java.util.List;
  * Full block sized latter used for easy navigation around multi-block structures.
  * Created by Green on 1/19/2016.
  */
-public class BlockScaffold extends Block
+public class BlockScaffold extends BlockLadder
 {
     public BlockScaffold()
     {
-        super(Material.circuits);
+        super();
         this.setBlockName(BasicIndustry.PREFIX + "scaffold");
         this.setHardness(2f);
+        this.setBlockBounds(0.1f, 0f, 0.1f, .9f, 1f, .9f);
     }
 
     @Override
