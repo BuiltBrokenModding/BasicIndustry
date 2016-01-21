@@ -54,6 +54,10 @@ public class BasicIndustry extends AbstractMod
     {
         super.preInit(event);
 
+        //Creative tab
+        manager.setTab(new ModCreativeTab(NAME));
+        ((ModCreativeTab) manager.defaultTab).itemStack = new ItemStack(Content.testFurnace);
+
         //Register content
         if (Engine.runningAsDev)
         {
@@ -64,10 +68,6 @@ public class BasicIndustry extends AbstractMod
         Content.testGrinder = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
         Content.blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
         Content.blockScaffold = manager.newBlock("ScaffoldBlock", BlockScaffold.class, ItemBlockMetadata.class);
-
-        //Creative tab
-        manager.setTab(new ModCreativeTab(NAME));
-        ((ModCreativeTab) manager.defaultTab).itemStack = new ItemStack(Content.testFurnace);
     }
 
     @Mod.EventHandler

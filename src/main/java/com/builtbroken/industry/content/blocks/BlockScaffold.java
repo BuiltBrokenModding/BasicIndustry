@@ -1,11 +1,9 @@
 package com.builtbroken.industry.content.blocks;
 
 import com.builtbroken.industry.BasicIndustry;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLadder;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -157,7 +155,7 @@ public class BlockScaffold extends Block
     {
         for (int i = 0; i < ScaffoldBlocks.values().length; i++)
         {
-            items.add(new ItemStack(item, i, 0));
+            items.add(new ItemStack(item, 0, i));
         }
     }
 
