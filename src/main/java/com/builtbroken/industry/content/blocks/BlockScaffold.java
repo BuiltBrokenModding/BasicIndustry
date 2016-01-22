@@ -38,13 +38,6 @@ public class BlockScaffold extends Block
     }
 
     @Override
-    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity)
-    {
-        //TODO have a version that is redstone controlled to not be a ladder when redstone is on
-        return true;
-    }
-
-    @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z)
     {
         if (canBlockStay(world, x, y, z))
@@ -186,7 +179,6 @@ public class BlockScaffold extends Block
             this.textureName = name;
             this.maxScaffolds = max;
         }
-
         /**
          * Max number of scaffolds that can be stacked without breaking.
          *

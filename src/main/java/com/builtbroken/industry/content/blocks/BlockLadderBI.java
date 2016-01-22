@@ -1,9 +1,15 @@
 package com.builtbroken.industry.content.blocks;
 
+import com.builtbroken.industry.BasicIndustry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -201,5 +207,44 @@ public class BlockLadderBI extends Block
     public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity)
     {
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister reg)
+    {
+        for (BILadders block : BILadders.values())
+        {
+            block.icon = reg.registerIcon(BasicIndustry.PREFIX + block.textureName);
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIcon(int side, int meta)
+    {
+        if (meta >= 0 && meta < BILadders.values().length)
+        {
+            return BILadders.values()[meta].icon;
+        }
+        return Blocks.fence.getIcon(side, meta);
+    }
+
+    /**
+     * Enum of meta values
+     */
+    public enum BILadders
+    {
+        BI_LADDER("casing_wood");
+
+        /** Tile icon. */
+        protected IIcon icon;
+        /** Texture name. */
+        protected final String textureName;
+
+        BILadders(String name)
+        {
+            this.textureName = name;
+        }
     }
 }
