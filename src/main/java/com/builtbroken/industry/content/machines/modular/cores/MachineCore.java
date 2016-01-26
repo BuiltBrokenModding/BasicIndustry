@@ -28,6 +28,13 @@ public class MachineCore extends MachineModule
     /** Module that handles automation style controls */
     protected MachineModule controllerModule; //TODO implement basic controller with on/off, input controls, redstone, etc
 
+    /** Hardcore setting, amount of dust in a machine, decreases effectiveness, builds over time when machine is used with minor build up when left alone  */
+    protected int dustBuildUpLevel;
+    /** Hardcore setting, amount of slug/grease on a machine, decreases effectiveness, builds over time when machine is used */
+    protected int greaseBuildUpLevel;
+    /** Hardcore setting, amount of rust on a machine, decreases effectiveness, builds over time due to no use */
+    protected int rustBuildUpLevel;
+
     /**
      * Default constructor
      *
