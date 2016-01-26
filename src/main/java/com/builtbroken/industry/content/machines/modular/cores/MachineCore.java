@@ -1,8 +1,12 @@
 package com.builtbroken.industry.content.machines.modular.cores;
 
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
+import com.builtbroken.industry.content.machines.modular.modules.InventoryModule;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
+import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -13,14 +17,14 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/10/2016.
  */
-public class MachineCore extends MachineModule
+public class MachineCore extends MachineModule implements IGuiHandler
 {
     //TODO create inventory module prefab that doesn't use slots, allows for easy AE integration if slots are not used.
     /** Module that handles or is the inventory for inputting items. */
-    protected MachineModule inputInventory;
+    protected InventoryModule inputInventory;
 
     /** Module that handles or is the inventory for outputting items. */
-    protected MachineModule outputInventory;
+    protected InventoryModule outputInventory;
 
     /** Module that handles power for the machine */
     protected MachineModule powerModule; //TODO implement power module that returns speed & power
@@ -28,7 +32,7 @@ public class MachineCore extends MachineModule
     /** Module that handles automation style controls */
     protected MachineModule controllerModule; //TODO implement basic controller with on/off, input controls, redstone, etc
 
-    /** Hardcore setting, amount of dust in a machine, decreases effectiveness, builds over time when machine is used with minor build up when left alone  */
+    /** Hardcore setting, amount of dust in a machine, decreases effectiveness, builds over time when machine is used with minor build up when left alone */
     protected int dustBuildUpLevel;
     /** Hardcore setting, amount of slug/grease on a machine, decreases effectiveness, builds over time when machine is used */
     protected int greaseBuildUpLevel;
@@ -128,5 +132,24 @@ public class MachineCore extends MachineModule
         {
             controllerModule.getContainedItems(items);
         }
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        return null;
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    {
+        return null;
+    }
+
+    @Override
+    public void onLeaveWorld()
+    {
+        super.onLeaveWorld();
+        //TODO clean up module's caches
     }
 }
