@@ -1,7 +1,7 @@
 package com.builtbroken.industry.content.machines.modular.cores;
 
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.modular.modules.InventoryModule;
+import com.builtbroken.industry.content.machines.modular.modules.inv.InventoryModuleMap;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,10 +21,10 @@ public class MachineCore extends MachineModule implements IGuiHandler
 {
     //TODO create inventory module prefab that doesn't use slots, allows for easy AE integration if slots are not used.
     /** Module that handles or is the inventory for inputting items. */
-    protected InventoryModule inputInventory;
+    protected InventoryModuleMap inputInventory;
 
     /** Module that handles or is the inventory for outputting items. */
-    protected InventoryModule outputInventory;
+    protected InventoryModuleMap outputInventory;
 
     /** Module that handles power for the machine */
     protected MachineModule powerModule; //TODO implement power module that returns speed & power

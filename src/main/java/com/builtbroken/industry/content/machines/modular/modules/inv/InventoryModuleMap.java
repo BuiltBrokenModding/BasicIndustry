@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines.modular.modules;
+package com.builtbroken.industry.content.machines.modular.modules.inv;
 
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
@@ -18,7 +18,7 @@ import java.util.*;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/12/2016.
  */
-public class InventoryModule extends MachineModule
+public class InventoryModuleMap extends InventoryModule
 {
     /** Inventory as a map of slots to slot content, reduces CPU time in theory */
     protected HashMap<Integer, ItemStack> inventory;
@@ -33,24 +33,19 @@ public class InventoryModule extends MachineModule
      * @param name
      * @param machine - host of the machine
      */
-    public InventoryModule(String name, TileDynamicMachine machine)
+    public InventoryModuleMap(String name, TileDynamicMachine machine)
     {
         super(name, machine);
     }
 
 
-    /**
-     * Adds an item to the inventory
-     *
-     * @param stack
-     * @return what is left of the stack
-     */
+    @Override
     public ItemStack addItem(final ItemStack stack)
     {
         if (stack != null)
         {
             ItemStack stackCopy = stack.copy();
-            List<Integer> partialSlots = getNearEmtpySlotsContaing(stack);
+            List<Integer> partialSlots = getNearEmptySlotsContaining(stack);
             if (partialSlots != null && !partialSlots.isEmpty())
             {
                 //TODO loop threw slots and insert stack until stack is gone
@@ -61,59 +56,32 @@ public class InventoryModule extends MachineModule
         return null;
     }
 
-    /**
-     * Adds an item to the inventory
-     *
-     * @param stack
-     * @return
-     */
+    @Override
     public ItemStack addItem(final ItemStack stack, int slot)
     {
         return null;
     }
 
-    /**
-     * Removes an item from the inventory
-     *
-     * @param stack
-     * @return
-     */
-    public ItemStack removeItem(final ItemStack stack)
+    @Override
+    public ItemStack removeItem(ItemStack stack, int count, boolean exact)
     {
         return null;
     }
 
-    /**
-     * Removes an item from the inventory
-     *
-     * @param stack
-     * @return
-     */
-    public ItemStack removeItem(final ItemStack stack, int slot)
+    @Override
+    public ItemStack removeItem(int slot, int count, boolean exact)
     {
         return null;
     }
 
-    /**
-     * Gets ItemStack contained in the slot
-     *
-     * @param slot - slot #
-     * @return slot contents or null if nothing
-     */
+    @Override
     public ItemStack getItem(int slot)
     {
         return getInventoryMap().get(slot);
     }
 
-    /**
-     * Gets all slots containing the stack, ignores stack size.
-     * Is not a new list but a cached value. Never modify or
-     * the cache may stop functioning as intended.
-     *
-     * @param stack
-     * @return cached list of slots to contents
-     */
-    public List<Integer> getSlotsContaning(ItemStack stack)
+    @Override
+    public List<Integer> getSlotsContaining(ItemStack stack)
     {
         if (stack != null)
         {
@@ -137,18 +105,10 @@ public class InventoryModule extends MachineModule
         return null;
     }
 
-    /**
-     * Gets all slots containing the stack that still have room to
-     * store more items, ignores stack size.
-     * Is not a new list but a cached value. Never modify or
-     * the cache may stop functioning as intended.
-     *
-     * @param stack
-     * @return list of near empty slots, new list each call
-     */
-    public List<Integer> getNearEmtpySlotsContaing(ItemStack stack)
+    @Override
+    public List<Integer> getNearEmptySlotsContaining(ItemStack stack)
     {
-        List<Integer> list = getSlotsContaning(stack);
+        List<Integer> list = getSlotsContaining(stack);
         if (list != null)
         {
             List<Integer> reList = new ArrayList();
@@ -163,32 +123,6 @@ public class InventoryModule extends MachineModule
             return reList;
         }
         return null;
-    }
-
-
-    /**
-     * Checks if the inventory contains the stack in question.
-     * Does not check stack size.
-     *
-     * @param stack - item being searched for, ignores stack size
-     * @return true if the inventory contains at least 1 item of the type
-     */
-    public boolean contains(ItemStack stack)
-    {
-        return getContainsCount(stack) > 0;
-    }
-
-    /**
-     * Checks if the inventory contains the stack in question.
-     * Compares stack size
-     *
-     * @param stack - item being searched
-     * @return true if the inventory contains more than the stacksize of
-     * the item passed in.
-     */
-    public boolean containsExact(ItemStack stack)
-    {
-        return stack == null ? false : getContainsCount(stack) > stack.stackSize;
     }
 
     /**
