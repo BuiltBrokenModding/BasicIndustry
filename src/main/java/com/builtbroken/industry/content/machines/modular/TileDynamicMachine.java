@@ -3,6 +3,7 @@ package com.builtbroken.industry.content.machines.modular;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
+import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileEnt;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +24,12 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider
     {
         super("dynamicMachine", Material.iron);
         this.itemBlock = ItemBlockDynamicMachine.class;
+    }
+
+    @Override
+    public Tile newTile()
+    {
+        return new TileDynamicMachine();
     }
 
     @Override
