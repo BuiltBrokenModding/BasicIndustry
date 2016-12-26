@@ -1,14 +1,10 @@
 package com.builtbroken.industry;
 
-import com.builtbroken.industry.content.Content;
 import com.builtbroken.industry.content.blocks.BlockIronMachineParts;
 import com.builtbroken.industry.content.blocks.BlockLadderBI;
 import com.builtbroken.industry.content.blocks.BlockScaffold;
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.tests.TileFurnace;
-import com.builtbroken.industry.content.machines.tests.TileOreCrusher;
-import com.builtbroken.industry.content.machines.tests.TileOreGrinder;
-import com.builtbroken.mc.core.Engine;
+import com.builtbroken.industry.content.machines.modular.cores.ItemMachineCore;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
 import com.builtbroken.mc.prefab.tile.item.ItemBlockMetadata;
@@ -17,6 +13,8 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -45,6 +43,17 @@ public class BasicIndustry extends AbstractMod
     @SidedProxy(clientSide = "com.builtbroken.industry.ClientProxy", serverSide = "com.builtbroken.industry.CommonProxy")
     public static CommonProxy proxy;
 
+    //Machines
+    public static Block blockDynamicMachine;
+
+    //Blocks
+    public static Block blockIronMachineParts;
+    public static Block blockScaffold;
+    public static Block blockLadderBI;
+
+    //Items
+    public static Item itemMachineCore;
+
     public BasicIndustry()
     {
         super(DOMAIN, "BasicIndustry");
@@ -57,26 +66,24 @@ public class BasicIndustry extends AbstractMod
 
         //Creative tab
         manager.setTab(new ModCreativeTab(NAME));
-        ((ModCreativeTab) manager.defaultTab).itemStack = new ItemStack(Content.testFurnace);
 
-        //Register content
-        if (Engine.runningAsDev)
-        {
-            Content.testFurnace = manager.newBlock(TileFurnace.class);
-            Content.testCrusher = manager.newBlock(TileOreCrusher.class);
-            Content.testGrinder = manager.newBlock(TileOreGrinder.class);
-        }
-        Content.testGrinder = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
-        Content.blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
-        Content.blockScaffold = manager.newBlock("ScaffoldBlock", BlockScaffold.class, ItemBlockMetadata.class);
-        Content.blockLadderBI = manager.newBlock("Ladder", BlockLadderBI.class, ItemBlockMetadata.class);
+        //Machines
+        blockDynamicMachine = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
+
+        //Decoration blocks
+        blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
+        blockScaffold = manager.newBlock("ScaffoldBlock", BlockScaffold.class, ItemBlockMetadata.class);
+        blockLadderBI = manager.newBlock("Ladder", BlockLadderBI.class, ItemBlockMetadata.class);
+
+        //Items
+        itemMachineCore = manager.newItem("machineCore", new ItemMachineCore());
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
-
+        ((ModCreativeTab) manager.defaultTab).itemStack = new ItemStack(blockDynamicMachine);
         //Load mod dependent content
         //Register entities
     }

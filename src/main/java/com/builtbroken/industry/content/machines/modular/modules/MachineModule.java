@@ -1,10 +1,11 @@
 package com.builtbroken.industry.content.machines.modular.modules;
 
-import com.builtbroken.industry.BasicIndustry;
+import com.builtbroken.industry.content.machines.modular.MachineModuleBuilder;
 import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.mc.api.ISave;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
+import com.builtbroken.mc.prefab.module.AbstractModule;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -16,27 +17,20 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/8/2016.
  */
-public class MachineModule implements ITileModule, ISave
+public class MachineModule extends AbstractModule implements ITileModule, ISave
 {
     /** Host of the module */
-    protected final TileDynamicMachine machine; //TODO replace with interface
-    /** Name of the module */
-    protected final String moduleName;
-    /** Translation key used for item and inventory */
-    protected String unlocalizedName;
-    /** Module as an itemstack */
-    protected ItemStack selfAsStack;
+    protected final TileDynamicMachine machine;
 
     /**
      * Default constructor
      *
      * @param machine - host of the machine
      */
-    public MachineModule(final String name, final TileDynamicMachine machine)
+    public MachineModule(final ItemStack stack, final String name, final TileDynamicMachine machine)
     {
+        super(stack, "module.machine." + name);
         this.machine = machine;
-        this.moduleName = name;
-        this.unlocalizedName = BasicIndustry.PREFIX + "machine.module." + name;
     }
 
     @Override
@@ -57,6 +51,11 @@ public class MachineModule implements ITileModule, ISave
     {
         //TODO pop connections to any grids
         //TODO remove event entries
+    }
+
+    public void update()
+    {
+
     }
 
     @Override
@@ -86,19 +85,16 @@ public class MachineModule implements ITileModule, ISave
      */
     public void getContainedItems(final List<ItemStack> items)
     {
-        if (selfAsStack != null)
+        if (item != null)
         {
-            items.add(selfAsStack.copy());
+            items.add(toStack());
         }
     }
 
-    /**
-     * Returns the module as an item
-     *
-     * @return new ItemStack(module)
-     */
-    public ItemStack toItemStack()
+    @Override
+    public String getSaveID()
     {
-        return selfAsStack != null ? selfAsStack.copy() : null;
+        return MachineModuleBuilder.INSTANCE.getID(this);
     }
+
 }
