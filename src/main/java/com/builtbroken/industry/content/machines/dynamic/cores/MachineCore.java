@@ -1,12 +1,12 @@
-package com.builtbroken.industry.content.machines.modular.cores;
+package com.builtbroken.industry.content.machines.dynamic.cores;
 
-import com.builtbroken.industry.content.machines.modular.MachineModuleBuilder;
-import com.builtbroken.industry.content.machines.modular.cores.gui.ContainerDynamicMachine;
-import com.builtbroken.industry.content.machines.modular.cores.gui.GuiDynamicMachine;
-import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
-import com.builtbroken.industry.content.machines.modular.modules.controllers.ControlModule;
-import com.builtbroken.industry.content.machines.modular.modules.inv.InventoryModule;
-import com.builtbroken.industry.content.machines.modular.modules.power.PowerModule;
+import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
+import com.builtbroken.industry.content.machines.dynamic.gui.ContainerDynamicMachine;
+import com.builtbroken.industry.content.machines.dynamic.gui.GuiDynamicMachine;
+import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.controllers.ControlModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.inv.InventoryModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.power.PowerModule;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.modules.IModule;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;

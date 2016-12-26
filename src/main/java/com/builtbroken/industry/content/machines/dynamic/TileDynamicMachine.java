@@ -1,8 +1,8 @@
-package com.builtbroken.industry.content.machines.modular;
+package com.builtbroken.industry.content.machines.dynamic;
 
 import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.industry.content.machines.modular.cores.ItemMachineCore;
-import com.builtbroken.industry.content.machines.modular.cores.MachineCore;
+import com.builtbroken.industry.content.machines.dynamic.cores.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.cores.MachineCore;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;

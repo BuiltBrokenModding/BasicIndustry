@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines.modular;
+package com.builtbroken.industry.content.machines.dynamic;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;

@@ -1,7 +1,7 @@
-package com.builtbroken.industry.content.machines.modular.cores.gui;
+package com.builtbroken.industry.content.machines.dynamic.gui;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.modular.modules.inv.InventoryModule;
+import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
+import com.builtbroken.industry.content.machines.dynamic.modules.inv.InventoryModule;
 import com.builtbroken.mc.prefab.gui.ContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;

@@ -1,7 +1,7 @@
-package com.builtbroken.industry.content.machines.modular.cores;
+package com.builtbroken.industry.content.machines.dynamic.cores;
 
 import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.industry.content.machines.modular.MachineModuleBuilder;
+import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import cpw.mods.fml.relauncher.Side;
