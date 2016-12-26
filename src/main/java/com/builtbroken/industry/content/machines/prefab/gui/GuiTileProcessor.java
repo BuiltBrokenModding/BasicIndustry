@@ -3,6 +3,7 @@ package com.builtbroken.industry.content.machines.prefab.gui;
 import com.builtbroken.industry.content.machines.prefab.TileProcessor;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 
 /**
  * Created by robert on 1/8/2015.
@@ -33,13 +34,18 @@ public class GuiTileProcessor extends GuiContainerBase
         super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
 
         //Draw slots
-        this.drawSlot(inventorySlots.getSlot(0));
-        this.drawSlot(inventorySlots.getSlot(1));
+        for (Object object : inventorySlots.inventorySlots)
+        {
+            if (object instanceof Slot)
+            {
+                drawSlot((Slot) object);
+            }
+        }
 
         //Draw progress bar, TODO fix
         if (this.machine.isEnabled())
         {
-            int width = (int)(((float)this.machine.getProcessorTicks() / (float)this.machine.getMaxProcessingTicks()) *  24);
+            int width = (int) (((float) this.machine.getProcessorTicks() / (float) this.machine.getMaxProcessingTicks()) * 24);
             this.drawTexturedModalRect(containerWidth + 79, containerHeight + 34, 176, 14, width + 1, 16);
         }
     }

@@ -9,7 +9,6 @@ import net.minecraft.inventory.SlotFurnace;
 /**
  * Created by robert on 1/8/2015.
  */
-@Deprecated
 public class ContainerTileProcessor extends ContainerBase
 {
     protected TileProcessor machine;

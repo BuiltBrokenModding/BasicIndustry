@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content.machines.modular.modules.power;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import net.minecraft.item.ItemStack;
 
@@ -15,10 +14,9 @@ public class PowerModule extends MachineModule
      *
      * @param stack
      * @param name
-     * @param machine - host of the machine
      */
-    public PowerModule(ItemStack stack, String name, TileDynamicMachine machine)
+    public PowerModule(ItemStack stack, String name)
     {
-        super(stack, "power." + name, machine);
+        super(stack, "power." + name);
     }
 }

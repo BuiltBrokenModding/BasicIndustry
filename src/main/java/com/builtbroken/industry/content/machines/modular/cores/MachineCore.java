@@ -1,12 +1,14 @@
 package com.builtbroken.industry.content.machines.modular.cores;
 
 import com.builtbroken.industry.content.machines.modular.MachineModuleBuilder;
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
+import com.builtbroken.industry.content.machines.modular.cores.gui.ContainerDynamicMachine;
+import com.builtbroken.industry.content.machines.modular.cores.gui.GuiDynamicMachine;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import com.builtbroken.industry.content.machines.modular.modules.controllers.ControlModule;
 import com.builtbroken.industry.content.machines.modular.modules.inv.InventoryModule;
 import com.builtbroken.industry.content.machines.modular.modules.power.PowerModule;
 import com.builtbroken.jlib.type.Pair;
+import com.builtbroken.mc.api.modules.IModule;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
@@ -61,6 +63,9 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     protected int machineTicks = 0;
     /** Recipe processing timer */
     protected int processingTime = 0;
+
+    protected int processingCompleteTime = 20;
+
     /** Does the machine have an active recipe */
     protected boolean hasRecipe = false;
     /** Does the machine have items to process */
@@ -72,11 +77,10 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
      * Default constructor
      *
      * @param name
-     * @param machine - host of the machine
      */
-    public MachineCore(ItemStack stack, String name, TileDynamicMachine machine)
+    public MachineCore(ItemStack stack, String name)
     {
-        super(stack, "core." + name, machine);
+        super(stack, "core." + name);
     }
 
     @Override
@@ -91,7 +95,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 hasRecipe = hasRecipe();
             }
 
-            if (hasRecipe && processingTime++ >= 20)
+            if (hasRecipe && processingTime++ >= processingCompleteTime)
             {
                 processingTime = 0;
                 IMachineRecipeHandler recipeHandler = getRecipeHandler();
@@ -129,7 +133,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
         ItemStack stack;
-        MachineModule module;
+        IModule module;
 
         if (!InventoryUtility.stacksMatch(prev, item) || item == null)
         {
@@ -338,7 +342,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
             inventory.load(nbt.getCompoundTag("inventory"));
         }
         ItemStack stack = inventory.getStackInSlot(INPUT_INV_SLOT);
-        MachineModule module = MachineModuleBuilder.INSTANCE.build(stack);
+        IModule module = MachineModuleBuilder.INSTANCE.build(stack);
         if (module instanceof InventoryModule)
         {
             inputInventory = (InventoryModule) module;
@@ -402,6 +406,16 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
         return null;
     }
 
+    public InventoryModule getInputInventory()
+    {
+        return inputInventory;
+    }
+
+    public InventoryModule getOutputInventory()
+    {
+        return outputInventory;
+    }
+
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
@@ -410,7 +424,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
         {
             //TODO open module GUI
         }
-        return null;
+        return new ContainerDynamicMachine(getHost(), player);
     }
 
     @Override
@@ -421,7 +435,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
         {
             //TODO open module GUI
         }
-        return null;
+        return new GuiDynamicMachine(getHost(), player);
     }
 
     @Override
@@ -439,5 +453,15 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
             inventory = new ExternalInventory(this, INVENTORY_SIZE);
         }
         return inventory;
+    }
+
+    public int getProcessingTicks()
+    {
+        return processingTime;
+    }
+
+    public int getMaxProcessingTicks()
+    {
+        return processingCompleteTime;
     }
 }

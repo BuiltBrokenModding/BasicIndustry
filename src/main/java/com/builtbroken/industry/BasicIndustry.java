@@ -77,6 +77,9 @@ public class BasicIndustry extends AbstractMod
 
         //Items
         itemMachineCore = manager.newItem("machineCore", new ItemMachineCore());
+
+        //Register modules
+        ItemMachineCore.MachineCores.register();
     }
 
     @Mod.EventHandler

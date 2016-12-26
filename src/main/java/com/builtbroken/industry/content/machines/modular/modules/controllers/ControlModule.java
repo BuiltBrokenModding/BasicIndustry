@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content.machines.modular.modules.controllers;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import net.minecraft.item.ItemStack;
 
@@ -15,10 +14,9 @@ public class ControlModule extends MachineModule
      *
      * @param stack
      * @param name
-     * @param machine - host of the machine
      */
-    public ControlModule(ItemStack stack, String name, TileDynamicMachine machine)
+    public ControlModule(ItemStack stack, String name)
     {
-        super(stack, "controller." + name, machine);
+        super(stack, "controller." + name);
     }
 }

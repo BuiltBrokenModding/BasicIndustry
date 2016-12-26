@@ -20,16 +20,23 @@ import java.util.List;
 public class MachineModule extends AbstractModule implements ITileModule, ISave
 {
     /** Host of the module */
-    protected final TileDynamicMachine machine;
+    protected TileDynamicMachine machine;
 
     /**
      * Default constructor
-     *
-     * @param machine - host of the machine
      */
-    public MachineModule(final ItemStack stack, final String name, final TileDynamicMachine machine)
+    public MachineModule(final ItemStack stack, final String name)
     {
         super(stack, "module.machine." + name);
+    }
+
+    public TileDynamicMachine getHost()
+    {
+        return machine;
+    }
+
+    public void setHost(TileDynamicMachine machine)
+    {
         this.machine = machine;
     }
 

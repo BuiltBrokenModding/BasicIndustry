@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content.machines.modular.modules.inv;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
@@ -22,11 +21,10 @@ public abstract class InventoryModule<I extends IExternalInventory> extends Mach
      * Default constructor
      *
      * @param name
-     * @param machine - host of the machine
      */
-    public InventoryModule(ItemStack stack, String name, TileDynamicMachine machine)
+    public InventoryModule(ItemStack stack, String name)
     {
-        super(stack, "inv." + name, machine);
+        super(stack, "inv." + name);
     }
 
     @Override

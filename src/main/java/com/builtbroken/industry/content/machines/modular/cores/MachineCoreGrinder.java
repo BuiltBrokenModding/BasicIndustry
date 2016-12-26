@@ -1,6 +1,5 @@
 package com.builtbroken.industry.content.machines.modular.cores;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;
 import net.minecraft.item.ItemStack;
@@ -11,14 +10,9 @@ import net.minecraft.item.ItemStack;
  */
 public class MachineCoreGrinder extends MachineCore
 {
-    /**
-     * Default constructor
-     *
-     * @param machine - host of the machine
-     */
-    public MachineCoreGrinder(ItemStack stack, TileDynamicMachine machine)
+    public MachineCoreGrinder(ItemStack stack)
     {
-        super(stack, "grinder", machine);
+        super(stack, "grinder");
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -32,7 +33,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/8/2016.
  */
-public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver
+public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver, ISidedInventory
 {
     @SideOnly(Side.CLIENT)
     public static IIcon dynamicMachineTexture;
@@ -84,7 +85,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             {
                 if (isServer())
                 {
-                    MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
+                    final MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
                     if (core != null)
                     {
                         machineCore = core;
@@ -106,6 +107,11 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             }
         }
         return false;
+    }
+
+    public MachineCore getMachineCore()
+    {
+        return machineCore;
     }
 
     @Override
@@ -234,6 +240,96 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         List<ItemStack> list = new ArrayList();
         list.add(toItemStack());
         return list;
+    }
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int p_94128_1_)
+    {
+        return new int[0];
+    }
+
+    @Override
+    public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_)
+    {
+        return false;
+    }
+
+    @Override
+    public int getSizeInventory()
+    {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int p_70301_1_)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)
+    {
+        return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int p_70304_1_)
+    {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)
+    {
+
+    }
+
+    @Override
+    public String getInventoryName()
+    {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName()
+    {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit()
+    {
+        return 0;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
+    {
+        return false;
+    }
+
+    @Override
+    public void openInventory()
+    {
+
+    }
+
+    @Override
+    public void closeInventory()
+    {
+
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)
+    {
+        return false;
     }
 }
 
