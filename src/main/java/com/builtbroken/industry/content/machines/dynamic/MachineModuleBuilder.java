@@ -1,6 +1,6 @@
-package com.builtbroken.industry.content.machines.modular;
+package com.builtbroken.industry.content.machines.dynamic;
 
-import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 
 /**

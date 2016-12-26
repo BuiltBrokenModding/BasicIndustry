@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines.modular.cores;
+package com.builtbroken.industry.content.machines.dynamic.cores;
 
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;

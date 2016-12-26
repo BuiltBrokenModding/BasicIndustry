@@ -1,6 +1,6 @@
-package com.builtbroken.industry.content.machines.modular.modules.inv;
+package com.builtbroken.industry.content.machines.dynamic.modules.inv;
 
-import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import net.minecraft.entity.player.EntityPlayer;

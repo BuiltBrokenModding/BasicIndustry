@@ -1,7 +1,7 @@
-package com.builtbroken.industry.content.machines.modular.modules;
+package com.builtbroken.industry.content.machines.dynamic.modules;
 
-import com.builtbroken.industry.content.machines.modular.MachineModuleBuilder;
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
+import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
+import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.mc.api.ISave;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;

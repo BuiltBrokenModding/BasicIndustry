@@ -1,6 +1,7 @@
-package com.builtbroken.industry.content.machines.modular.cores.gui;
+package com.builtbroken.industry.content.machines.dynamic.gui;
 
-import com.builtbroken.industry.content.machines.modular.TileDynamicMachine;
+import com.builtbroken.industry.client.Assets;
+import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.mc.prefab.gui.GuiContainerBase;
 import com.builtbroken.mc.prefab.gui.buttons.GuiImageButton;
 import net.minecraft.client.resources.I18n;

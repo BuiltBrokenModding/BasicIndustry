@@ -1,13 +1,13 @@
-package com.builtbroken.industry.content.machines.modular.modules.power;
+package com.builtbroken.industry.content.machines.dynamic.modules.controllers;
 
-import com.builtbroken.industry.content.machines.modular.modules.MachineModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
 import net.minecraft.item.ItemStack;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 12/26/2016.
  */
-public class PowerModule extends MachineModule
+public class ControlModule extends MachineModule
 {
     /**
      * Default constructor
@@ -15,8 +15,8 @@ public class PowerModule extends MachineModule
      * @param stack
      * @param name
      */
-    public PowerModule(ItemStack stack, String name)
+    public ControlModule(ItemStack stack, String name)
     {
-        super(stack, "power." + name);
+        super(stack, "controller." + name);
     }
 }
