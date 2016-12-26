@@ -19,12 +19,12 @@ buildscript {
 }
 
 plugins {
-  id 'com.matthewprenger.cursegradle' version '1.0.1'
+  id "com.matthewprenger.cursegradle" version "1.0.8"
   id 'net.saliman.cobertura' version '2.2.5'
   id 'com.github.kt3k.coveralls' version '2.0.1'
-  id "com.github.johnrengelman.shadow" version "1.2.2"
+  //id "com.github.johnrengelman.shadow" version "1.2.2"
   id "net.franz-becker.gradle-lombok" version "1.3"
-  id 'com.jfrog.bintray' version '1.1'
+  //id 'com.jfrog.bintray' version '1.1'
 }
 
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index/index.gradle'
@@ -34,14 +34,14 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'jacoco'
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/scripts/forge/deps.gradle'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-minecraft {    
+minecraft {
     replace "required-after:VoltzEngine", "required-after:VoltzEngine@[" + voltz_engine_version + ",)"
 }
 
-dependencies 
+dependencies
 {
     compile "dev.builtbroken.voltzengine:VoltzEngine:1.7.10-" + voltz_engine_version + "+:deobf-dev"
     testRuntime 'org.slf4j:slf4j-simple:1.7.10'
