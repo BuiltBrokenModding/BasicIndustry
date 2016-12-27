@@ -181,7 +181,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (machineCore != null)
         {
-            machineCore.load(nbt.getCompoundTag("core").getCompoundTag("tag"));
+            machineCore.load(nbt.getCompoundTag("coreItemStack").getCompoundTag("tag"));
         }
         else
         {
