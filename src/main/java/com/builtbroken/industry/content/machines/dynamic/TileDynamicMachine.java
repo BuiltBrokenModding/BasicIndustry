@@ -38,9 +38,12 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     @SideOnly(Side.CLIENT)
     public static IIcon dynamicMachineTexture;
 
-    /** The machine */
+    /** The machine core */
     protected MachineCore machineCore;
+    /** Decoration for each side */
     protected Block[] machineSides;
+    /** Inventory side connections, 0 = none, 1 = input, 2 = output, 3 = both */
+    protected byte[] inventoryConnection = new byte[6];
 
     public TileDynamicMachine()
     {
@@ -117,6 +120,22 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     @Override
     protected boolean onPlayerRightClickWrench(EntityPlayer player, int side, Pos hit)
     {
+        if (player.isSneaking())
+        {
+            //Cycle connection type for side
+            if (isServer())
+            {
+                byte type = inventoryConnection[side];
+                type++;
+                if (type > 3)
+                {
+                    type = 0;
+                }
+                inventoryConnection[side] = type;
+                sendDescPacket();
+            }
+            return true;
+        }
         //TODO make rotatable
         return false;
     }
@@ -243,75 +262,231 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     }
 
     @Override
-    public int[] getAccessibleSlotsFromSide(int p_94128_1_)
+    public int[] getAccessibleSlotsFromSide(int side)
     {
+        //TODO cache if called often
+        if (machineCore != null && side >= 0 && side < 6)
+        {
+            byte type = inventoryConnection[side];
+            if (type != 0)
+            {
+                int slotCount = 0;
+                int spacer = machineCore.getInventory().getSizeInventory();
+                if ((type == 1 || type == 3) && machineCore.getInputInventory() != null)
+                {
+                    slotCount += machineCore.getInputInventory().getSizeInventory();
+                }
+                if ((type == 2 || type == 3) && machineCore.getOutputInventory() != null)
+                {
+                    slotCount += machineCore.getOutputInventory().getSizeInventory();
+                }
+
+                int[] slots = new int[slotCount];
+                int i = 0;
+                for (; i < spacer; i++)
+                {
+                    slots[i] = i;
+                }
+                if (machineCore.getInputInventory() != null)
+                {
+                    if (type == 1 || type == 3)
+                    {
+                        for (int j = 0; j < machineCore.getInputInventory().getSizeInventory(); j++)
+                        {
+                            slots[i++] = j + spacer;
+                        }
+                    }
+                    spacer += machineCore.getInputInventory().getSizeInventory();
+                }
+                if ((type == 2 || type == 3) && machineCore.getOutputInventory() != null)
+                {
+                    for (int j = 0; j < machineCore.getOutputInventory().getSizeInventory(); j++)
+                    {
+                        slots[i++] = j + spacer;
+                    }
+                }
+            }
+        }
         return new int[0];
     }
 
     @Override
-    public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_)
+    public boolean canInsertItem(int slot, ItemStack stack, int side)
     {
+        if (machineCore != null && side >= 0 && side < 6)
+        {
+            byte type = inventoryConnection[side];
+            if (type == 1 || type == 3)
+            {
+                return slot >= machineCore.getInventory().getSizeInventory() && slot < (machineCore.getInputInventory().getSizeInventory() + machineCore.getInventory().getSizeInventory());
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_)
+    public boolean canExtractItem(int slot, ItemStack stack, int side)
     {
+        if (machineCore != null && side >= 0 && side < 6)
+        {
+            byte type = inventoryConnection[side];
+            if (type == 2 || type == 3)
+            {
+                int spacer = machineCore.getInventory().getSizeInventory();
+                if (machineCore.getInputInventory() != null)
+                {
+                    spacer += machineCore.getInputInventory().getSizeInventory();
+                }
+                return slot >= spacer && slot < (machineCore.getOutputInventory().getSizeInventory() + spacer);
+            }
+        }
         return false;
     }
 
     @Override
     public int getSizeInventory()
     {
+        if (machineCore != null)
+        {
+            int slots = machineCore.getInventory().getSizeInventory();
+            if (machineCore.getInputInventory() != null)
+            {
+                slots += machineCore.getInputInventory().getSizeInventory();
+            }
+            if (machineCore.getOutputInventory() != null)
+            {
+                slots += machineCore.getOutputInventory().getSizeInventory();
+            }
+            return slots;
+        }
         return 0;
     }
 
     @Override
-    public ItemStack getStackInSlot(int p_70301_1_)
+    public ItemStack getStackInSlot(int slot)
     {
+        if (machineCore != null && slot >= 0)
+        {
+            int spacer = machineCore.getInventory().getSizeInventory();
+            if (slot >= 0 && slot < spacer)
+            {
+                return machineCore.getInventory().getStackInSlot(slot);
+            }
+            if (machineCore.getInputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getInputInventory().getSizeInventory())
+                {
+                    return machineCore.getInputInventory().getStackInSlot(slot - spacer);
+                }
+                spacer += machineCore.getInputInventory().getSizeInventory();
+            }
+            if (machineCore.getOutputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getOutputInventory().getSizeInventory())
+                {
+                    return machineCore.getOutputInventory().getStackInSlot(slot - spacer);
+                }
+            }
+        }
         return null;
     }
 
     @Override
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)
+    public ItemStack decrStackSize(int slot, int n)
     {
-        return null;
+        if (this.getStackInSlot(slot) != null)
+        {
+            ItemStack stack;
+
+            if (this.getStackInSlot(slot).stackSize <= n)
+            {
+                stack = this.getStackInSlot(slot);
+                setInventorySlotContents(slot, null);
+                markDirty();
+                return stack;
+            }
+            else
+            {
+                stack = this.getStackInSlot(slot).splitStack(n);
+                if (this.getStackInSlot(slot).stackSize == 0)
+                {
+                    setInventorySlotContents(slot, null);
+                }
+                markDirty();
+                return stack;
+            }
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_)
+    public ItemStack getStackInSlotOnClosing(int slot)
     {
-        return null;
+        if (this.getStackInSlot(slot) != null)
+        {
+            ItemStack var2 = this.getStackInSlot(slot);
+            setInventorySlotContents(slot, null);
+            return var2;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     @Override
-    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)
+    public void setInventorySlotContents(int slot, ItemStack stack)
     {
-
+        if (machineCore != null && slot >= 0)
+        {
+            int spacer = machineCore.getInventory().getSizeInventory();
+            if (slot >= 0 && slot < spacer)
+            {
+                machineCore.getInventory().setInventorySlotContents(slot, stack);
+            }
+            if (machineCore.getInputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getInputInventory().getSizeInventory())
+                {
+                    machineCore.getInputInventory().setInventorySlotContents(slot - spacer, stack);
+                }
+                spacer += machineCore.getInputInventory().getSizeInventory();
+            }
+            if (machineCore.getOutputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getOutputInventory().getSizeInventory())
+                {
+                    machineCore.getOutputInventory().setInventorySlotContents(slot - spacer, stack);
+                }
+            }
+        }
     }
 
     @Override
     public String getInventoryName()
     {
-        return null;
+        return "tile.machine.dynamic";
     }
 
     @Override
     public boolean hasCustomInventoryName()
     {
-        return false;
+        return true;
     }
 
     @Override
     public int getInventoryStackLimit()
     {
-        return 0;
+        return 64;
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
+    public boolean isUseableByPlayer(EntityPlayer player)
     {
-        return false;
+        return player.getDistance(xi() + 0.5, yi() + 0.5, zi() + 0.5) < 20;
     }
 
     @Override
@@ -327,9 +502,9 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     }
 
     @Override
-    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_)
+    public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
-        return false;
+        return slot >= this.getSizeInventory() && slot < getSizeInventory();
     }
 }
 
