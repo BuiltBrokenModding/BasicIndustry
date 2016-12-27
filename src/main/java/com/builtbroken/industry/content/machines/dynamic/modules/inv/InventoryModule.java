@@ -1,6 +1,6 @@
 package com.builtbroken.industry.content.machines.dynamic.modules.inv;
 
-import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.MachineCoreModule;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/28/2016.
  */
-public abstract class InventoryModule<I extends IExternalInventory> extends MachineModule implements IExternalInventory, IInventoryProvider
+public abstract class InventoryModule<I extends IExternalInventory> extends MachineCoreModule implements IExternalInventory, IInventoryProvider
 {
     protected I inventory;
 

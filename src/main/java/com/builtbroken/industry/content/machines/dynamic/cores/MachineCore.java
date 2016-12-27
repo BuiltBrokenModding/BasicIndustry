@@ -464,4 +464,9 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     {
         return processingCompleteTime;
     }
+
+    public boolean isMachineOn()
+    {
+        return isMachineOn;
+    }
 }
