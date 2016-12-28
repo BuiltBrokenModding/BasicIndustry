@@ -28,9 +28,9 @@ public class GuiDynamicMachine extends GuiContainerBase
     public static final int RECIPES_BUTTON_ID = 4;
     public static final int SETTINGS_BUTTON_ID = 5;
 
-    public GuiDynamicMachine(TileDynamicMachine machine, EntityPlayer player)
+    public GuiDynamicMachine(TileDynamicMachine machine, EntityPlayer player, int id)
     {
-        super(new ContainerDynamicMachine(machine, player));
+        super(new ContainerDynamicMachine(machine, player, id));
         this.machine = machine;
     }
 

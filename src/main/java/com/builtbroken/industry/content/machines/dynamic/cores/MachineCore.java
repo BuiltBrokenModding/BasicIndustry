@@ -30,12 +30,12 @@ import java.util.List;
  */
 public abstract class MachineCore extends MachineModule implements IGuiTile, IInventoryProvider
 {
-    public final int INVENTORY_SIZE = 5;
-    public final int GRINDER_SLOT = 0;
-    public final int INPUT_INV_SLOT = 1;
-    public final int OUTPUT_INV_SLOT = 2;
-    public final int POWER_MOD_SLOT = 3;
-    public final int CONTROL_MOD_SLOT = 4;
+    public static final int INVENTORY_SIZE = 5;
+    public static final int GRINDER_SLOT = 0;
+    public static final int INPUT_INV_SLOT = 1;
+    public static final int OUTPUT_INV_SLOT = 2;
+    public static final int POWER_MOD_SLOT = 3;
+    public static final int CONTROL_MOD_SLOT = 4;
 
     //TODO create inventory module prefab that doesn't use slots, allows for easy AE integration if slots are not used.
     /** Module that handles or is the inventory for inputting items. */
@@ -50,7 +50,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     /** Module that handles automation style controls */
     protected ControlModule controllerModule; //TODO implement basic controller with on/off, input controls, redstone, etc
 
-    protected ExternalInventory inventory;
+    protected ExternalInventory _inventory;
 
     /** Hardcore setting, amount of dust in a machine, decreases effectiveness, builds over time when machine is used with minor build up when left alone */
     protected int dustBuildUpLevel;
@@ -105,7 +105,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                     Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
                     if (object instanceof ItemStack)
                     {
-
+                        //TODO finish recipe
                     }
                 }
             }
@@ -145,11 +145,12 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
                 else
                 {
-                    stack = inventory.getStackInSlot(INPUT_INV_SLOT);
+                    stack = getInventory().getStackInSlot(INPUT_INV_SLOT);
                     module = MachineModuleBuilder.INSTANCE.build(stack);
                     if (module instanceof InventoryModule)
                     {
                         inputInventory = (InventoryModule) module;
+                        inputInventory.setHost(this);
                     }
                 }
             }
@@ -161,11 +162,12 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
                 else
                 {
-                    stack = inventory.getStackInSlot(OUTPUT_INV_SLOT);
+                    stack = getInventory().getStackInSlot(OUTPUT_INV_SLOT);
                     module = MachineModuleBuilder.INSTANCE.build(stack);
                     if (module instanceof InventoryModule)
                     {
                         outputInventory = (InventoryModule) module;
+                        outputInventory.setHost(this);
                     }
                 }
             }
@@ -177,11 +179,12 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
                 else
                 {
-                    stack = inventory.getStackInSlot(POWER_MOD_SLOT);
+                    stack = getInventory().getStackInSlot(POWER_MOD_SLOT);
                     module = MachineModuleBuilder.INSTANCE.build(stack);
                     if (module instanceof PowerModule)
                     {
                         powerModule = (PowerModule) module;
+                        powerModule.setHost(this);
                     }
                 }
             }
@@ -193,11 +196,12 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
                 else
                 {
-                    stack = inventory.getStackInSlot(CONTROL_MOD_SLOT);
+                    stack = getInventory().getStackInSlot(CONTROL_MOD_SLOT);
                     module = MachineModuleBuilder.INSTANCE.build(stack);
                     if (module instanceof ControlModule)
                     {
                         controllerModule = (ControlModule) module;
+                        controllerModule.setHost(this);
                     }
                 }
             }
@@ -339,34 +343,38 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     {
         if (nbt.hasKey("inventory"))
         {
-            inventory.load(nbt.getCompoundTag("inventory"));
+            getInventory().load(nbt.getCompoundTag("inventory"));
         }
-        ItemStack stack = inventory.getStackInSlot(INPUT_INV_SLOT);
+        ItemStack stack = getInventory().getStackInSlot(INPUT_INV_SLOT);
         IModule module = MachineModuleBuilder.INSTANCE.build(stack);
         if (module instanceof InventoryModule)
         {
             inputInventory = (InventoryModule) module;
+            inputInventory.setHost(this);
         }
 
-        stack = inventory.getStackInSlot(OUTPUT_INV_SLOT);
+        stack = getInventory().getStackInSlot(OUTPUT_INV_SLOT);
         module = MachineModuleBuilder.INSTANCE.build(stack);
         if (module instanceof InventoryModule)
         {
             outputInventory = (InventoryModule) module;
+            outputInventory.setHost(this);
         }
 
-        stack = inventory.getStackInSlot(POWER_MOD_SLOT);
+        stack = getInventory().getStackInSlot(POWER_MOD_SLOT);
         module = MachineModuleBuilder.INSTANCE.build(stack);
         if (module instanceof PowerModule)
         {
             powerModule = (PowerModule) module;
+            powerModule.setHost(this);
         }
 
-        stack = inventory.getStackInSlot(CONTROL_MOD_SLOT);
+        stack = getInventory().getStackInSlot(CONTROL_MOD_SLOT);
         module = MachineModuleBuilder.INSTANCE.build(stack);
         if (module instanceof ControlModule)
         {
             controllerModule = (ControlModule) module;
+            controllerModule.setHost(this);
         }
     }
 
@@ -378,10 +386,10 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
             MachineModule module = getModuleForSlot(i);
             if (module != null)
             {
-                inventory.setInventorySlotContents(i, module.toStack());
+                getInventory().setInventorySlotContents(i, module.toStack());
             }
         }
-        nbt.setTag("inventory", inventory.save(new NBTTagCompound()));
+        nbt.setTag("inventory", getInventory().save(new NBTTagCompound()));
         return nbt;
     }
 
@@ -419,23 +427,13 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player)
     {
-        //TODO only open module GUI if machine is powered down
-        if (ID == 1)
-        {
-            //TODO open module GUI
-        }
-        return new ContainerDynamicMachine(getHost(), player);
+        return new ContainerDynamicMachine(getHost(), player, ID);
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player)
     {
-        //TODO only open module GUI if machine is powered down
-        if (ID == 1)
-        {
-            //TODO open module GUI
-        }
-        return new GuiDynamicMachine(getHost(), player);
+        return new GuiDynamicMachine(getHost(), player, ID);
     }
 
     @Override
@@ -448,11 +446,11 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     @Override
     public ExternalInventory getInventory()
     {
-        if (inventory == null)
+        if (_inventory == null)
         {
-            inventory = new ExternalInventory(this, INVENTORY_SIZE);
+            _inventory = new ExternalInventory(this, INVENTORY_SIZE);
         }
-        return inventory;
+        return _inventory;
     }
 
     public int getProcessingTicks()

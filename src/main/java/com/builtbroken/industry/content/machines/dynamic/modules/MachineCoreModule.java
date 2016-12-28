@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 public class MachineCoreModule extends MachineModule
 {
     protected MachineCore machineCore;
+
     /**
      * Default constructor
      *
@@ -19,5 +20,11 @@ public class MachineCoreModule extends MachineModule
     public MachineCoreModule(ItemStack stack, String name)
     {
         super(stack, name);
+    }
+
+    public void setHost(MachineCore core)
+    {
+        this.machineCore = core;
+        setHost(core.getHost());
     }
 }

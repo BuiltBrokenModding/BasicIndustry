@@ -3,6 +3,7 @@ package com.builtbroken.industry.content.machines.dynamic;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.cores.ItemMachineCore;
 import com.builtbroken.industry.content.machines.dynamic.cores.MachineCore;
+import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
@@ -11,8 +12,10 @@ import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileEnt;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -41,7 +44,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     /** The machine core */
     protected MachineCore machineCore;
     /** Decoration for each side */
-    protected Block[] machineSides;
+    protected Pair<Block, Integer>[] machineSides;
     /** Inventory side connections, 0 = none, 1 = input, 2 = output, 3 = both */
     protected byte[] inventoryConnection = new byte[6];
 
@@ -64,6 +67,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (machineCore != null)
         {
+            machineCore.setHost(this);
             machineCore.onJoinWorld();
         }
     }
@@ -92,7 +96,9 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                     if (core != null)
                     {
                         machineCore = core;
+                        machineCore.setHost(this);
                         machineCore.onJoinWorld();
+
                         if (!player.capabilities.isCreativeMode)
                         {
                             player.inventory.decrStackSize(player.inventory.currentItem, 1);
@@ -107,6 +113,22 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                     }
                 }
                 return true;
+            }
+        }
+
+        if (machineCore != null)
+        {
+            if (isServer())
+            {
+                openGui(player, BasicIndustry.INSTANCE);
+            }
+            return true;
+        }
+        else
+        {
+            if (isServer())
+            {
+                player.addChatMessage(new ChatComponentText("No core installed to interact with machine."));
             }
         }
         return false;
@@ -182,23 +204,42 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         if (machineCore != null)
         {
             machineCore.load(nbt.getCompoundTag("coreItemStack").getCompoundTag("tag"));
+            machineCore.setHost(this);
         }
         else
         {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(nbt);
+            ItemStack stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("coreItemStack"));
             if (stack != null)
             {
-                String id = stack.getTagCompound().getString(MachineModuleBuilder.SAVE_ID);
-                if (machineCore == null || !machineCore.getSaveID().equals(id))
-                {
-                    machineCore = (MachineCore) MachineModuleBuilder.INSTANCE.build(stack);
-                }
-                else
-                {
-                    readMachineNBT(nbt);
-                }
+                machineCore = (MachineCore) MachineModuleBuilder.INSTANCE.build(stack);
+                machineCore.setHost(this);
             }
         }
+    }
+
+    @Override
+    public void readDescPacket(ByteBuf buf)
+    {
+        if (buf.readBoolean())
+        {
+            readMachineNBT(ByteBufUtils.readTag(buf));
+        }
+        else
+        {
+            machineCore = null;
+        }
+    }
+
+    @Override
+    public void writeDescPacket(ByteBuf buf)
+    {
+        buf.writeBoolean(machineCore != null);
+        if (machineCore != null)
+        {
+            ByteBufUtils.writeTag(buf, writeMachineNBT(new NBTTagCompound()));
+        }
+        //TODO write machine sides
+        //TODO write connections
     }
 
     @Override
@@ -244,10 +285,10 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (machineSides != null)
         {
-            Block block = machineSides[side];
-            if (block != null)
+            Pair<Block, Integer> pair = machineSides[side];
+            if (pair != null)
             {
-                return block.getIcon(side, 0); //TODO add meta support
+                return pair.left().getIcon(side, pair.right());
             }
         }
         return dynamicMachineTexture;

@@ -59,7 +59,7 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
         {
             ItemStack stack = new ItemStack(item, 1, core.ordinal());
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setString(ModuleBuilder.SAVE_ID, "module.machine.core." + core.name);
+            stack.getTagCompound().setString(ModuleBuilder.SAVE_ID, BasicIndustry.DOMAIN + ".module.machine.core." + core.name);
             list.add(stack);
         }
     }

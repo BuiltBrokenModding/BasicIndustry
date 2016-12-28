@@ -5,6 +5,7 @@ import com.builtbroken.industry.content.blocks.BlockLadderBI;
 import com.builtbroken.industry.content.blocks.BlockScaffold;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.cores.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.inv.ItemInvModule;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
 import com.builtbroken.mc.prefab.tile.item.ItemBlockMetadata;
@@ -19,7 +20,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Simple industry mod with an interesting take on machines.
- * <p/>
+ * <p>
  * Created by Dark(robert, DarkGuardsman) on 1/7/2015.
  */
 @Mod(modid = BasicIndustry.DOMAIN, name = BasicIndustry.NAME, version = BasicIndustry.VERSION, dependencies = "required-after:VoltzEngine")
@@ -53,6 +54,7 @@ public class BasicIndustry extends AbstractMod
 
     //Items
     public static Item itemMachineCore;
+    public static Item itemInventoryModules;
 
     public BasicIndustry()
     {
@@ -77,9 +79,11 @@ public class BasicIndustry extends AbstractMod
 
         //Items
         itemMachineCore = manager.newItem("machineCore", new ItemMachineCore());
+        itemInventoryModules = manager.newItem("inventoryModule", new ItemInvModule());
 
         //Register modules
         ItemMachineCore.MachineCores.register();
+        ItemInvModule.InvModules.register();
     }
 
     @Mod.EventHandler

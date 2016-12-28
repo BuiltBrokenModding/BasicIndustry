@@ -7,6 +7,9 @@ import net.minecraft.tileentity.TileEntityFurnace;
 
 /**
  * Simple burner power source similar to the {@link TileEntityFurnace}
+ * <p>
+ * The lore logic - Basic Steam Generator that produced mechanical power to run
+ * the machine.
  *
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 12/26/2016.
@@ -16,6 +19,7 @@ public class PowerModuleBurner extends PowerModule
     public static int POWER_PER_TICK = 100;
     public static int MAX_POWER = 1000;
     protected int burnTime = 0;
+    //TODO make recipe (Furnace + tubes + gears + bucket of water) aka steam generator
 
     /**
      * Default constructor
