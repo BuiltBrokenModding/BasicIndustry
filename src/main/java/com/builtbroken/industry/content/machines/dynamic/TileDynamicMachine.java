@@ -9,6 +9,7 @@ import com.builtbroken.mc.api.tile.IRemovable;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileEnt;
@@ -105,7 +106,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                             player.inventoryContainer.detectAndSendChanges();
                         }
                         player.addChatMessage(new ChatComponentText("Machine core added to frame."));
-                        sendDescPacket();
+                        onMachineChanged(true);
                     }
                     else
                     {
@@ -132,6 +133,15 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             }
         }
         return false;
+    }
+
+    public void onMachineChanged(boolean syncClient)
+    {
+        this.worldObj.markTileEntityChunkModified(this.xCoord, this.yCoord, this.zCoord, this);
+        if (syncClient)
+        {
+            sendDescPacket();
+        }
     }
 
     public MachineCore getMachineCore()
@@ -240,6 +250,20 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         }
         //TODO write machine sides
         //TODO write connections
+    }
+
+    @Override
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
+    {
+        if (!super.read(buf, id, player, type))
+        {
+            if (id == 2)
+            {
+                openGui(player, buf.readInt(), BasicIndustry.INSTANCE);
+            }
+            return false;
+        }
+        return true;
     }
 
     @Override

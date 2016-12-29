@@ -17,6 +17,15 @@ import net.minecraft.inventory.SlotFurnace;
  */
 public class ContainerDynamicMachine extends ContainerBase
 {
+    //Main GUI buttons
+    public static final int CRAFTING_GUI_ID = 0;
+    public static final int MODULE_GUI_ID = 1;
+    public static final int HELP_GUI_ID = 2;
+
+    //Secondary buttons
+    public static final int RECIPES_GUI_ID = 3;
+    public static final int SETTINGS_GUI_ID = 4;
+
     protected TileDynamicMachine machine;
 
     public ContainerDynamicMachine(TileDynamicMachine machine, EntityPlayer player, int id)
@@ -25,8 +34,12 @@ public class ContainerDynamicMachine extends ContainerBase
         this.machine = machine;
         if (machine.getMachineCore() != null)
         {
-            if(id == 0)
+            if(id == CRAFTING_GUI_ID)
             {
+
+                this.addSlotToContainer(new SlotFurnace(player, machine.getMachineCore().getInventory(), 0, 80, 35));
+
+
                 InventoryModule inputInventory = machine.getMachineCore().getInputInventory();
                 InventoryModule outputInventory = machine.getMachineCore().getOutputInventory();
 
@@ -37,9 +50,9 @@ public class ContainerDynamicMachine extends ContainerBase
                     int row = 0;
                     for (int i = 0; i < inputInventory.getSizeInventory(); i++)
                     {
-                        this.addSlotToContainer(new Slot(inputInventory, i, 56 + col * 16, 35 + row * 16));
+                        this.addSlotToContainer(new Slot(inputInventory, i, 10 + col * 18, 15 + row * 18));
                         col++;
-                        if (col >= 4)
+                        if (col >= 3)
                         {
                             col = 0;
                             row++;
@@ -53,9 +66,9 @@ public class ContainerDynamicMachine extends ContainerBase
                     int row = 0;
                     for (int i = 0; i < outputInventory.getSizeInventory(); i++)
                     {
-                        this.addSlotToContainer(new SlotFurnace(player, outputInventory, i, 116 + col * 16, 35 + row * 16));
+                        this.addSlotToContainer(new SlotFurnace(player, outputInventory, i, 114 + col * 18, 15 + row * 18));
                         col++;
-                        if (col >= 4)
+                        if (col >= 3)
                         {
                             col = 0;
                             row++;
@@ -63,14 +76,15 @@ public class ContainerDynamicMachine extends ContainerBase
                     }
                 }
             }
-            else if(id == 1)
+            else if(id == MODULE_GUI_ID)
             {
-                this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.INPUT_INV_SLOT, 116, 35));
-                this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.OUTPUT_INV_SLOT, 116 + 20, 35));
+                int x = 30;
+                this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.INPUT_INV_SLOT, x, 20));
+                this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.OUTPUT_INV_SLOT, x + 100, 20));
 
-                this.addSlotToContainer(new SlotPowerModule(machine.getMachineCore().getInventory(), MachineCore.POWER_MOD_SLOT, 116 + 40, 35));
+                this.addSlotToContainer(new SlotPowerModule(machine.getMachineCore().getInventory(), MachineCore.POWER_MOD_SLOT, x + 30, 42));
 
-                this.addSlotToContainer(new SlotControlModule(machine.getMachineCore().getInventory(), MachineCore.CONTROL_MOD_SLOT, 116 + 60, 35));
+                this.addSlotToContainer(new SlotControlModule(machine.getMachineCore().getInventory(), MachineCore.CONTROL_MOD_SLOT, x + 70, 42));
             }
         }
         addPlayerInventory(player);

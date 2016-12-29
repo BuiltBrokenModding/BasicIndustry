@@ -15,6 +15,6 @@ public class InventoryModuleChest extends InventoryModuleBasic
      */
     public InventoryModuleChest(ItemStack stack)
     {
-        super(stack, "chest", 4);
+        super(stack, "chest", 6);
     }
 }

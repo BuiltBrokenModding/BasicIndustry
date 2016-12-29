@@ -100,6 +100,15 @@ public abstract class InventoryModule<I extends IExternalInventory> extends Mach
     }
 
     @Override
+    public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
+    {
+        if (getHost() != null && !getHost().world().isRemote)
+        {
+            getHost().onMachineChanged(false);
+        }
+    }
+
+    @Override
     public String getInventoryName()
     {
         return getInventory().getInventoryName();

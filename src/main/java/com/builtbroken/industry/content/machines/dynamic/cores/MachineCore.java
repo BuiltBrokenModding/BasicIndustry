@@ -18,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -206,6 +205,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
             }
         }
+        getHost().onMachineChanged(true);
     }
 
     /**
@@ -234,51 +234,6 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
      * @return recipe handler
      */
     protected abstract IMachineRecipeHandler getRecipeHandler();
-
-    /**
-     * Does the input inventory contain the stack
-     *
-     * @param stack - item wer are searching for
-     *              with stacksize.
-     * @return true if the item is contained
-     */
-    protected boolean hasInputStack(ItemStack stack)
-    {
-        if (inputInventory != null)
-        {
-            Collection<ItemStack> stacks = inputInventory.getContainedItems();
-            for (ItemStack slotStack : stacks)
-            {
-                if (InventoryUtility.stacksMatch(stack, slotStack))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Removes items from the input inventory
-     *
-     * @param stack
-     * @return true if all items were removed
-     */
-    protected boolean consumeInputStack(ItemStack stack)
-    {
-        if (inputInventory != null)
-        {
-            Collection<ItemStack> stacks = inputInventory.getContainedItems();
-            for (ItemStack slotStack : stacks)
-            {
-                if (InventoryUtility.stacksMatch(stack, slotStack))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
 
     /**
