@@ -176,9 +176,9 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        if (nbt.hasKey("coreItemStack"))
+        if (nbt.hasKey("machineCore"))
         {
-            readMachineNBT(nbt.getCompoundTag("coreItemStack"));
+            readMachineNBT(nbt.getCompoundTag("machineCore"));
         }
     }
 
@@ -186,7 +186,9 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        writeMachineNBT(nbt);
+        NBTTagCompound tag = new NBTTagCompound();
+        writeMachineNBT(tag);
+        nbt.setTag("machineCore", tag);
     }
 
     /**
@@ -199,7 +201,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (machineCore != null)
         {
-            nbt.setTag("coreItemStack", machineCore.toStack().writeToNBT(new NBTTagCompound()));
+            machineCore.toStack().writeToNBT(nbt);
         }
         return nbt;
     }
@@ -213,12 +215,12 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (machineCore != null)
         {
-            machineCore.load(nbt.getCompoundTag("coreItemStack").getCompoundTag("tag"));
+            machineCore.load(nbt.getCompoundTag("tag"));
             machineCore.setHost(this);
         }
         else
         {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("coreItemStack"));
+            ItemStack stack = ItemStack.loadItemStackFromNBT(nbt);
             if (stack != null)
             {
                 machineCore = (MachineCore) MachineModuleBuilder.INSTANCE.build(stack);

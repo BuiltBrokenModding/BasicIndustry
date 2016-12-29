@@ -85,7 +85,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     @Override
     public void update()
     {
-        if (hasItems && isMachineOn && hasPower())
+        if (hasItems && isMachineOn && hasPower() && inputInventory != null && outputInventory != null)
         {
             //Only check recipes every so often to avoid lag
             if (machineTicks++ >= 20)
@@ -102,9 +102,10 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 {
                     Pair<ItemStack, Integer> slot = InventoryUtility.findFirstItemInInventory(inputInventory, 6, 1);
                     Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
-                    if (object instanceof ItemStack)
+                    if (object instanceof ItemStack && canOutput((ItemStack) object))
                     {
-                        //TODO finish recipe
+                        addToOutput((ItemStack) object);
+                        inputInventory.decrStackSize(slot.right(), 1);
                     }
                 }
             }
@@ -269,6 +270,41 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
             }
         }
         return false;
+    }
+
+    protected ItemStack addToOutput(ItemStack stack)
+    {
+        if (outputInventory != null && stack != null)
+        {
+            ItemStack copyStack = stack.copy();
+            List<Integer> slots = outputInventory.getSlotsWithSpace();
+            for (int slot : slots)
+            {
+                ItemStack slotStack = outputInventory.getStackInSlot(slot);
+                if (slotStack == null)
+                {
+                    outputInventory.setInventorySlotContents(slot, copyStack);
+                    return null;
+                }
+                else if (InventoryUtility.stacksMatch(slotStack, stack))
+                {
+                    int space = InventoryUtility.roomLeftInSlot(outputInventory, slot);
+                    if (space >= copyStack.stackSize)
+                    {
+                        slotStack.stackSize += copyStack.stackSize;
+                        outputInventory.setInventorySlotContents(slot, slotStack);
+                        return null;
+                    }
+                    else
+                    {
+                        slotStack.stackSize += space;
+                        copyStack.stackSize -= space;
+                        outputInventory.setInventorySlotContents(slot, slotStack);
+                    }
+                }
+            }
+        }
+        return stack;
     }
 
     @Override
