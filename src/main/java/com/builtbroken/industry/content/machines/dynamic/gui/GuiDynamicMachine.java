@@ -111,7 +111,7 @@ public class GuiDynamicMachine extends GuiContainerBase
             //Draw progress bar, TODO fix
             if (machine.getMachineCore() != null)
             {
-                float percent = (float) machine.getMachineCore().getProcessingTicks() / (float) machine.getMachineCore().getMaxProcessingTicks();
+                float percent = (float) machine.getMachineCore().getProcessingTicks() / (float) machine.getMachineCore().getRecipeProcessingTime();
                 drawMicroBar(65, 17, 40, percent, Color.ORANGE);
             }
         }

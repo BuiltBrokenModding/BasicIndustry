@@ -1,15 +1,20 @@
-package com.builtbroken.industry.content.machines.dynamic.modules.inv;
+package com.builtbroken.industry.content.machines.dynamic.modules.items;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
+import com.builtbroken.industry.content.machines.dynamic.modules.inv.*;
+import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -17,12 +22,12 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 12/28/2016.
  */
-public class ItemInvModule extends ItemAbstractModule<InventoryModule>
+public class ItemInvModule extends ItemAbstractModule<InventoryModule> implements IRecipeContainer
 {
     public ItemInvModule()
     {
         this.setMaxStackSize(5);
-        this.setUnlocalizedName("inventoryModule");
+        this.setUnlocalizedName(BasicIndustry.PREFIX + "inventoryModule");
     }
 
     @Override
@@ -60,6 +65,8 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule>
                 return new InventoryModuleChest(stack);
             case HOPPER:
                 return new InventoryModuleHopper(stack);
+            case DISPENSER:
+                return new InventoryModuleDispenser(stack);
         }
         return null;
     }
@@ -73,17 +80,58 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule>
         return InvModules.SINGLE;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg)
+    {
+        for (InvModules module : InvModules.values())
+        {
+            module.icon = reg.registerIcon(BasicIndustry.PREFIX + "module.inv." + module.name);
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int meta)
+    {
+        if (meta >= 0 && meta < InvModules.values().length)
+        {
+            return InvModules.values()[meta].icon;
+        }
+        return this.itemIcon;
+    }
+
+    @Override
+    public void genRecipes(List<IRecipe> recipes)
+    {
+        //TODO recipes
+    }
+
+    /**
+     * Enum of modules represented by this item's meta value.
+     */
     public enum InvModules
     {
         SINGLE("uno", InventoryModuleUno.class),
         CHEST("chest", InventoryModuleChest.class),
-        HOPPER("hopper", InventoryModuleHopper.class);
+        HOPPER("hopper", InventoryModuleHopper.class),
+        DISPENSER("dispenser", InventoryModuleDispenser.class);
 
-        private final String cachedSaveID;
+        /** Simplified name of the module. */
+        public final String name;
+        /** Class of the module, used during registration. */
         public final Class<? extends InventoryModule> clazz;
+
+        /** Icon for the module */
+        @SideOnly(Side.CLIENT)
+        public IIcon icon;
+
+        /** Cached module save ID. */
+        private final String cachedSaveID;
 
         InvModules(String name, Class<? extends InventoryModule> clazz)
         {
+            this.name = name;
             cachedSaveID = ".module.machine.inv." + name;
             this.clazz = clazz;
         }

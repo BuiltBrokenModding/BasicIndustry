@@ -1,10 +1,10 @@
 package com.builtbroken.industry.content.machines.dynamic.gui;
 
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.dynamic.cores.MachineCore;
 import com.builtbroken.industry.content.machines.dynamic.gui.slots.SlotControlModule;
 import com.builtbroken.industry.content.machines.dynamic.gui.slots.SlotInvModule;
 import com.builtbroken.industry.content.machines.dynamic.gui.slots.SlotPowerModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.industry.content.machines.dynamic.modules.inv.InventoryModule;
 import com.builtbroken.mc.prefab.gui.ContainerBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +34,7 @@ public class ContainerDynamicMachine extends ContainerBase
         this.machine = machine;
         if (machine.getMachineCore() != null)
         {
-            if(id == CRAFTING_GUI_ID)
+            if (id == CRAFTING_GUI_ID)
             {
 
                 this.addSlotToContainer(new SlotFurnace(player, machine.getMachineCore().getInventory(), 0, 80, 35));
@@ -46,37 +46,81 @@ public class ContainerDynamicMachine extends ContainerBase
                 //Input inventory
                 if (inputInventory != null)
                 {
+                    int size = inputInventory.getSizeInventory();
                     int col = 0;
                     int row = 0;
-                    for (int i = 0; i < inputInventory.getSizeInventory(); i++)
+
+                    if (size == 1)
                     {
-                        this.addSlotToContainer(new Slot(inputInventory, i, 10 + col * 18, 15 + row * 18));
-                        col++;
-                        if (col >= 3)
+                        this.addSlotToContainer(new Slot(inputInventory, 0, 30, 15));
+                    }
+                    else if (size == 2 || size == 4)
+                    {
+                        for (int i = 0; i < size; i++)
                         {
-                            col = 0;
-                            row++;
+                            this.addSlotToContainer(new Slot(inputInventory, i, 20 + col * 18, 15 + row * 18));
+                            col++;
+                            if (col >= 2)
+                            {
+                                col = 0;
+                                row++;
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        for (int i = 0; i < size; i++)
+                        {
+                            this.addSlotToContainer(new Slot(inputInventory, i, 10 + col * 18, 15 + row * 18));
+                            col++;
+                            if (col >= 3)
+                            {
+                                col = 0;
+                                row++;
+                            }
                         }
                     }
                 }
                 //Output inventory
                 if (outputInventory != null)
                 {
+                    int size = outputInventory.getSizeInventory();
                     int col = 0;
                     int row = 0;
-                    for (int i = 0; i < outputInventory.getSizeInventory(); i++)
+                    if (size == 1)
                     {
-                        this.addSlotToContainer(new SlotFurnace(player, outputInventory, i, 114 + col * 18, 15 + row * 18));
-                        col++;
-                        if (col >= 3)
+                        this.addSlotToContainer(new SlotFurnace(player, outputInventory, 0, 134, 15));
+                    }
+                    else if (size == 2 || size == 4)
+                    {
+                        for (int i = 0; i < size; i++)
                         {
-                            col = 0;
-                            row++;
+                            this.addSlotToContainer(new SlotFurnace(player, outputInventory, i, 124 + col * 18, 15 + row * 18));
+                            col++;
+                            if (col >= 2)
+                            {
+                                col = 0;
+                                row++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < size; i++)
+                        {
+                            this.addSlotToContainer(new SlotFurnace(player, outputInventory, i, 114 + col * 18, 15 + row * 18));
+                            col++;
+                            if (col >= 3)
+                            {
+                                col = 0;
+                                row++;
+                            }
                         }
                     }
                 }
             }
-            else if(id == MODULE_GUI_ID)
+            else if (id == MODULE_GUI_ID)
             {
                 int x = 30;
                 this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.INPUT_INV_SLOT, x, 20));

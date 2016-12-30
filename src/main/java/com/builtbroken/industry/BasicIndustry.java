@@ -1,14 +1,12 @@
 package com.builtbroken.industry;
 
-import com.builtbroken.industry.content.blocks.BlockIronMachineParts;
-import com.builtbroken.industry.content.blocks.BlockLadderBI;
-import com.builtbroken.industry.content.blocks.BlockScaffold;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.dynamic.cores.ItemMachineCore;
-import com.builtbroken.industry.content.machines.dynamic.modules.inv.ItemInvModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemControlModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemInvModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemPowerModule;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
-import com.builtbroken.mc.prefab.tile.item.ItemBlockMetadata;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -47,14 +45,12 @@ public class BasicIndustry extends AbstractMod
     //Machines
     public static Block blockDynamicMachine;
 
-    //Blocks
-    public static Block blockIronMachineParts;
-    public static Block blockScaffold;
-    public static Block blockLadderBI;
 
     //Items
     public static Item itemMachineCore;
     public static Item itemInventoryModules;
+    public static Item itemPowerModules;
+    public static Item itemControlModules;
 
     public BasicIndustry()
     {
@@ -72,18 +68,17 @@ public class BasicIndustry extends AbstractMod
         //Machines
         blockDynamicMachine = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
 
-        //Decoration blocks
-        blockIronMachineParts = manager.newBlock("BIIronMachineParts", BlockIronMachineParts.class, ItemBlockMetadata.class);
-        blockScaffold = manager.newBlock("ScaffoldBlock", BlockScaffold.class, ItemBlockMetadata.class);
-        blockLadderBI = manager.newBlock("Ladder", BlockLadderBI.class, ItemBlockMetadata.class);
-
         //Items
         itemMachineCore = manager.newItem("machineCore", new ItemMachineCore());
         itemInventoryModules = manager.newItem("inventoryModule", new ItemInvModule());
+        itemPowerModules = manager.newItem("powerModule", new ItemPowerModule());
+        itemControlModules = manager.newItem("controlModule", new ItemControlModule());
 
         //Register modules
         ItemMachineCore.MachineCores.register();
         ItemInvModule.InvModules.register();
+        ItemPowerModule.PowerModules.register();
+        ItemControlModule.ControlModules.register();
     }
 
     @Mod.EventHandler

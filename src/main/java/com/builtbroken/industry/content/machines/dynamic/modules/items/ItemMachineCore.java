@@ -1,15 +1,20 @@
-package com.builtbroken.industry.content.machines.dynamic.cores;
+package com.builtbroken.industry.content.machines.dynamic.modules.items;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCoreCrusher;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCoreGrinder;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -22,7 +27,7 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
     public ItemMachineCore()
     {
         this.setMaxStackSize(5);
-        this.setUnlocalizedName("machineCore");
+        this.setUnlocalizedName(BasicIndustry.PREFIX + "machineCore");
     }
 
     @Override
@@ -46,6 +51,9 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
                 case GRINDER:
                     core = new MachineCoreGrinder(stack);
                     break;
+                case CRUSHER:
+                    core = new MachineCoreCrusher(stack);
+                    break;
             }
         }
         return core;
@@ -64,12 +72,37 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
         }
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister reg)
+    {
+        for (MachineCores module : MachineCores.values())
+        {
+            module.icon = reg.registerIcon(BasicIndustry.PREFIX + "module.core." + module.name);
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IIcon getIconFromDamage(int meta)
+    {
+        if (meta >= 0 && meta < MachineCores.values().length)
+        {
+            return MachineCores.values()[meta].icon;
+        }
+        return this.itemIcon;
+    }
+
     public enum MachineCores
     {
-        GRINDER("grinder", MachineCoreGrinder.class);
+        GRINDER("grinder", MachineCoreGrinder.class),
+        CRUSHER("crusher", MachineCoreCrusher.class);
 
         public final String name;
         public final Class<? extends MachineCore> clazz;
+
+        @SideOnly(Side.CLIENT)
+        public IIcon icon;
 
         MachineCores(String name, Class<? extends MachineCore> clazz)
         {

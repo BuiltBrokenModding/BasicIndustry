@@ -1,8 +1,8 @@
 package com.builtbroken.industry.content.machines.dynamic;
 
 import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.industry.content.machines.dynamic.cores.ItemMachineCore;
-import com.builtbroken.industry.content.machines.dynamic.cores.MachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;

@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines.dynamic.cores;
+package com.builtbroken.industry.content.machines.dynamic.modules.cores;
 
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
 import com.builtbroken.industry.content.machines.dynamic.gui.ContainerDynamicMachine;
@@ -63,14 +63,12 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     /** Recipe processing timer */
     protected int processingTime = 0;
 
-    protected int processingCompleteTime = 20;
-
     /** Does the machine have an active recipe */
     protected boolean hasRecipe = false;
     /** Does the machine have items to process */
     protected boolean hasItems = false;
     /** Is the machine power on and functional */
-    protected boolean isMachineOn = false;
+    protected boolean isMachineOn = true;
 
     /**
      * Default constructor
@@ -85,7 +83,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     @Override
     public void update()
     {
-        if (hasItems && isMachineOn && hasPower() && inputInventory != null && outputInventory != null)
+        if (hasPower() && inputInventory != null && outputInventory != null)
         {
             //Only check recipes every so often to avoid lag
             if (machineTicks++ >= 20)
@@ -94,7 +92,7 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 hasRecipe = hasRecipe();
             }
 
-            if (hasRecipe && processingTime++ >= processingCompleteTime)
+            if (hasRecipe && processingTime++ >= getRecipeProcessingTime())
             {
                 processingTime = 0;
                 IMachineRecipeHandler recipeHandler = getRecipeHandler();
@@ -217,13 +215,16 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     protected boolean hasRecipe()
     {
         IMachineRecipeHandler recipeHandler = getRecipeHandler();
-        if (recipeHandler != null)
+        if (recipeHandler != null && inputInventory != null)
         {
             Pair<ItemStack, Integer> slot = InventoryUtility.findFirstItemInInventory(inputInventory, 6, 1);
-            Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
-            if (object instanceof ItemStack)
+            if (slot != null && slot.left() != null)
             {
-                return true;
+                Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
+                if (object instanceof ItemStack)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -444,16 +445,32 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
         return _inventory;
     }
 
+    /**
+     * Amount of time currently working towards recipe
+     * completion
+     *
+     * @return ticks
+     */
     public int getProcessingTicks()
     {
         return processingTime;
     }
 
-    public int getMaxProcessingTicks()
+    /**
+     * The expected time to complete the current recipe
+     *
+     * @return ticks
+     */
+    public int getRecipeProcessingTime()
     {
-        return processingCompleteTime;
+        return 20;
     }
 
+    /**
+     * Is the machine currently enabled
+     *
+     * @return
+     */
     public boolean isMachineOn()
     {
         return isMachineOn;

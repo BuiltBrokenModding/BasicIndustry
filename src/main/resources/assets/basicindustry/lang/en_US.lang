@@ -1,0 +1,32 @@
+
+## Machines
+tile.basicindustry:dynamicMachine.name=Dynamic Machine Frame
+
+## Machine Cores
+item.basicindustry:machineCore.grinder.name=Grinder Machine Core
+
+## Inventory Modules
+item.basicindustry:inventoryModule.single.name=Inventory Module
+item.basicindustry:inventoryModule.chest.name=Chest Inv Module
+item.basicindustry:inventoryModule.hopper.name=Hopper Inv Module
+item.basicindustry:inventoryModule.dispenser.name=Dispenser Inv Module
+
+item.basicindustry:inventoryModule.single.info=Most basic inventory module, contains a single slot of storage
+item.basicindustry:inventoryModule.chest.info=Chest converted into machine inventory, contains 6 slots of inventory
+item.basicindustry:inventoryModule.hopper.info=Allows machines to auto export or import, contains 5 slots of inventory, can only import from top, can only export on sides or bottom
+item.basicindustry:inventoryModule.dispenser.info=Allows a machine to dispense items, contains 3 slots of inventory, Only works in output slot
+
+
+## Power Module
+item.basicindustry:powerModule.burner.name=Burner Module
+item.basicindustry:powerModule.rf.name=Redstone Flux Module
+item.basicindustry:powerModule.ue.name=Battery Module
+
+item.basicindustry:powerModule.burner.info=Simple steam piston burner, uses burnable fuel to operate
+item.basicindustry:powerModule.rf.info=Adds compatibility with RF power, Provides an internal buffer, Coverts rf into work
+item.basicindustry:powerModule.ue.info=Adds compatibility with power systems, Provides basic battery storage, Converts power into work
+
+## Control Module
+item.basicindustry:controllerModule.redstone.name=Redstone Controller
+
+item.basicindustry:controllerModule.redstone.info=Allows for simple redstone controls

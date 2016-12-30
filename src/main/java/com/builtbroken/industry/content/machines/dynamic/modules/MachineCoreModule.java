@@ -1,6 +1,6 @@
 package com.builtbroken.industry.content.machines.dynamic.modules;
 
-import com.builtbroken.industry.content.machines.dynamic.cores.MachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import net.minecraft.item.ItemStack;
 
 /**
