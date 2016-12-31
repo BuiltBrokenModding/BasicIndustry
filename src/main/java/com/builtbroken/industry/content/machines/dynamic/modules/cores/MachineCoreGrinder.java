@@ -24,6 +24,6 @@ public class MachineCoreGrinder extends MachineCore
     @Override
     public int getRecipeProcessingTime()
     {
-        return 100;
+        return 300;
     }
 }

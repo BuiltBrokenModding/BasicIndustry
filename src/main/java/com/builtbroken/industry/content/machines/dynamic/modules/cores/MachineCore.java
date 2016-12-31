@@ -6,17 +6,23 @@ import com.builtbroken.industry.content.machines.dynamic.gui.GuiDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.MachineModule;
 import com.builtbroken.industry.content.machines.dynamic.modules.controllers.ControlModule;
 import com.builtbroken.industry.content.machines.dynamic.modules.inv.InventoryModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineTools;
 import com.builtbroken.industry.content.machines.dynamic.modules.power.PowerModule;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.modules.IModule;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
+import com.builtbroken.mc.core.network.IPacketIDReceiver;
+import com.builtbroken.mc.core.network.packet.PacketTile;
+import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.prefab.inventory.ExternalInventory;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -27,10 +33,10 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/10/2016.
  */
-public abstract class MachineCore extends MachineModule implements IGuiTile, IInventoryProvider
+public abstract class MachineCore extends MachineModule implements IGuiTile, IInventoryProvider, IPacketIDReceiver
 {
     public static final int INVENTORY_SIZE = 5;
-    public static final int GRINDER_SLOT = 0;
+    public static final int MACHINE_TOOL_SLOT = 0;
     public static final int INPUT_INV_SLOT = 1;
     public static final int OUTPUT_INV_SLOT = 2;
     public static final int POWER_MOD_SLOT = 3;
@@ -83,29 +89,33 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     @Override
     public void update()
     {
-        if (hasPower() && inputInventory != null && outputInventory != null)
+        if (getHost() != null && getHost().isServer())
         {
-            //Only check recipes every so often to avoid lag
-            if (machineTicks++ >= 20)
+            if (hasPower() && inputInventory != null && outputInventory != null)
             {
-                machineTicks = 0;
-                hasRecipe = hasRecipe();
-            }
-
-            if (hasRecipe && processingTime++ >= getRecipeProcessingTime())
-            {
-                processingTime = 0;
-                IMachineRecipeHandler recipeHandler = getRecipeHandler();
-                if (recipeHandler != null)
+                //Only check recipes every so often to avoid lag
+                if (machineTicks++ >= 20)
                 {
-                    Pair<ItemStack, Integer> slot = InventoryUtility.findFirstItemInInventory(inputInventory, 6, 1);
-                    Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
-                    if (object instanceof ItemStack && canOutput((ItemStack) object))
+                    machineTicks = 0;
+                    hasRecipe = hasRecipe();
+                }
+
+                if (hasRecipe && processingTime++ >= getRecipeProcessingTime())
+                {
+                    processingTime = 0;
+                    IMachineRecipeHandler recipeHandler = getRecipeHandler();
+                    if (recipeHandler != null)
                     {
-                        addToOutput((ItemStack) object);
-                        inputInventory.decrStackSize(slot.right(), 1);
+                        Pair<ItemStack, Integer> slot = InventoryUtility.findFirstItemInInventory(inputInventory, 6, 1);
+                        Object object = recipeHandler.getRecipe(new Object[]{slot.left()}, 0, 0);
+                        if (object instanceof ItemStack && canOutput((ItemStack) object))
+                        {
+                            addToOutput((ItemStack) object);
+                            inputInventory.decrStackSize(slot.right(), 1);
+                        }
                     }
                 }
+                sendPacketToGui(0, processingTime);
             }
         }
     }
@@ -204,7 +214,10 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
                 }
             }
         }
-        getHost().onMachineChanged(true);
+        if (getHost() != null)
+        {
+            getHost().onMachineChanged(true);
+        }
     }
 
     /**
@@ -445,6 +458,19 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
         return _inventory;
     }
 
+    @Override
+    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+    {
+        return slot == MACHINE_TOOL_SLOT && stack.getItem() instanceof ItemMachineTools; //TODO replace with interface check
+    }
+
+    @Override
+    public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
+    {
+        //TODO add ability to remove broken tools
+        return false;
+    }
+
     /**
      * Amount of time currently working towards recipe
      * completion
@@ -474,5 +500,41 @@ public abstract class MachineCore extends MachineModule implements IGuiTile, IIn
     public boolean isMachineOn()
     {
         return isMachineOn;
+    }
+
+    public boolean read(ByteBuf buf, int id, EntityPlayer player, PacketType type)
+    {
+        if (getHost() != null)
+        {
+            if (getHost().isClient())
+            {
+                if (id == 0)
+                {
+                    processingTime = buf.readInt();
+                    return true;
+                }
+            }
+            else
+            {
+
+            }
+        }
+        return false;
+    }
+
+    public void sendPacket(Object... data)
+    {
+        if (getHost() != null)
+        {
+            getHost().sendPacket(new PacketTile(getHost(), 3, data));
+        }
+    }
+
+    public void sendPacketToGui(Object... data)
+    {
+        if (getHost() != null)
+        {
+            getHost().sendPacketToGuiUsers(new PacketTile(getHost(), 3, data));
+        }
     }
 }

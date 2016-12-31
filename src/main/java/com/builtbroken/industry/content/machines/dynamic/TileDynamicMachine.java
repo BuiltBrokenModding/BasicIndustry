@@ -1,8 +1,9 @@
 package com.builtbroken.industry.content.machines.dynamic;
 
 import com.builtbroken.industry.BasicIndustry;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.ISBRMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
@@ -11,6 +12,7 @@ import com.builtbroken.mc.api.tile.node.ITileModule;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketType;
 import com.builtbroken.mc.lib.transform.vector.Pos;
+import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import com.builtbroken.mc.prefab.tile.Tile;
 import com.builtbroken.mc.prefab.tile.TileEnt;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -54,7 +56,9 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         super("dynamicMachine", Material.iron);
         this.itemBlock = ItemBlockDynamicMachine.class;
         this.isOpaque = false;
+        this.renderNormalBlock = false;
         this.renderTileEntity = true;
+        this.renderType = ISBRMachine.ID;
     }
 
     @Override
@@ -164,6 +168,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                     type = 0;
                 }
                 inventoryConnection[side] = type;
+                player.addChatComponentMessage(new ChatComponentText("Side set to " + (inventoryConnection[side] == 0 ? "no connections" : inventoryConnection[side] == 1 ? "input only" : inventoryConnection[side] == 2 ? "output only" : "input and output")));
                 sendDescPacket();
             }
             return true;
@@ -180,6 +185,14 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         {
             readMachineNBT(nbt.getCompoundTag("machineCore"));
         }
+        if (nbt.hasKey("invConnections"))
+        {
+            NBTTagCompound tag = nbt.getCompoundTag("invConnections");
+            for (int i = 0; i < 6; i++)
+            {
+                inventoryConnection[i] = tag.getByte("" + i);
+            }
+        }
     }
 
     @Override
@@ -189,6 +202,13 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         NBTTagCompound tag = new NBTTagCompound();
         writeMachineNBT(tag);
         nbt.setTag("machineCore", tag);
+
+        NBTTagCompound invConTag = new NBTTagCompound();
+        for (int i = 0; i < 6; i++)
+        {
+            invConTag.setByte("" + i, inventoryConnection[i]);
+        }
+        nbt.setTag("invConnections", invConTag);
     }
 
     /**
@@ -213,9 +233,11 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
      */
     public void readMachineNBT(NBTTagCompound nbt)
     {
-        if (machineCore != null)
+        NBTTagCompound save = nbt.getCompoundTag("tag");
+        String saveID = save.getString(ModuleBuilder.SAVE_ID);
+        if (machineCore != null && saveID.equals(machineCore.getSaveID()))
         {
-            machineCore.load(nbt.getCompoundTag("tag"));
+            machineCore.load(save);
             machineCore.setHost(this);
         }
         else
@@ -252,6 +274,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         }
         //TODO write machine sides
         //TODO write connections
+        markRender();
     }
 
     @Override
@@ -262,6 +285,15 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             if (id == 2)
             {
                 openGui(player, buf.readInt(), BasicIndustry.INSTANCE);
+            }
+            else if (id == 3)
+            {
+                if (machineCore != null)
+                {
+                    machineCore.read(buf, buf.readInt(), player, type);
+                    return true;
+                }
+                return false;
             }
             return false;
         }
@@ -339,10 +371,18 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             {
                 int slotCount = 0;
                 int spacer = machineCore.getInventory().getSizeInventory();
-                if ((type == 1 || type == 3) && machineCore.getInputInventory() != null)
+                //Input
+                if (type == 1 || type == 3)
                 {
-                    slotCount += machineCore.getInputInventory().getSizeInventory();
+                    //Machine core grinder input
+                    slotCount += 1;
+                    //TODO add access to power module
+                    if (machineCore.getInputInventory() != null)
+                    {
+                        slotCount += machineCore.getInputInventory().getSizeInventory();
+                    }
                 }
+                //output
                 if ((type == 2 || type == 3) && machineCore.getOutputInventory() != null)
                 {
                     slotCount += machineCore.getOutputInventory().getSizeInventory();
@@ -350,9 +390,12 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
 
                 int[] slots = new int[slotCount];
                 int i = 0;
-                for (; i < spacer; i++)
+
+                if (type == 1 || type == 3)
                 {
-                    slots[i] = i;
+                    i = 1;
+                    slots[0] = MachineCore.MACHINE_TOOL_SLOT;
+                    //TODO add better handling for machine core slots to allow more than 1
                 }
                 if (machineCore.getInputInventory() != null)
                 {
@@ -360,7 +403,8 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                     {
                         for (int j = 0; j < machineCore.getInputInventory().getSizeInventory(); j++)
                         {
-                            slots[i++] = j + spacer;
+                            slots[i] = j + spacer;
+                            i += 1;
                         }
                     }
                     spacer += machineCore.getInputInventory().getSizeInventory();
@@ -369,9 +413,11 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                 {
                     for (int j = 0; j < machineCore.getOutputInventory().getSizeInventory(); j++)
                     {
-                        slots[i++] = j + spacer;
+                        slots[i] = j + spacer;
+                        i += 1;
                     }
                 }
+                return slots;
             }
         }
         return new int[0];
@@ -385,7 +431,18 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             byte type = inventoryConnection[side];
             if (type == 1 || type == 3)
             {
-                return slot >= machineCore.getInventory().getSizeInventory() && slot < (machineCore.getInputInventory().getSizeInventory() + machineCore.getInventory().getSizeInventory());
+                if (slot < machineCore.getInventory().getSizeInventory())
+                {
+                    return machineCore.getInventory().canInsertItem(slot, stack, side);
+                }
+                if (machineCore.getInputInventory() != null)
+                {
+                    int spacer = machineCore.getInventory().getSizeInventory();
+                    if (slot >= spacer && slot < (machineCore.getInputInventory().getSizeInventory() + spacer))
+                    {
+                        return machineCore.getInputInventory().canStore(stack, slot, ForgeDirection.getOrientation(side));
+                    }
+                }
             }
         }
         return false;
@@ -394,7 +451,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, int side)
     {
-        if (machineCore != null && side >= 0 && side < 6)
+        if (machineCore != null && machineCore.getOutputInventory() != null && side >= 0 && side < 6)
         {
             byte type = inventoryConnection[side];
             if (type == 2 || type == 3)
@@ -404,7 +461,39 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
                 {
                     spacer += machineCore.getInputInventory().getSizeInventory();
                 }
-                return slot >= spacer && slot < (machineCore.getOutputInventory().getSizeInventory() + spacer);
+                if (slot >= spacer && slot < (machineCore.getOutputInventory().getSizeInventory() + spacer))
+                {
+                    return machineCore.getInputInventory().canRemove(stack, slot, ForgeDirection.getOrientation(side));
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack)
+    {
+        if (slot >= 0 && slot < getSizeInventory())
+        {
+            int spacer = machineCore.getInventory().getSizeInventory();
+            if (slot >= 0 && slot < spacer)
+            {
+                return machineCore.getInventory().isItemValidForSlot(slot, stack);
+            }
+            if (machineCore.getInputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getInputInventory().getSizeInventory())
+                {
+                    return machineCore.getInputInventory().isItemValidForSlot(slot, stack);
+                }
+                spacer += machineCore.getInputInventory().getSizeInventory();
+            }
+            if (machineCore.getOutputInventory() != null)
+            {
+                if (slot < spacer + machineCore.getOutputInventory().getSizeInventory())
+                {
+                    return machineCore.getOutputInventory().isItemValidForSlot(slot, stack);
+                }
             }
         }
         return false;
@@ -566,12 +655,6 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     public void closeInventory()
     {
 
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack)
-    {
-        return slot >= this.getSizeInventory() && slot < getSizeInventory();
     }
 }
 

@@ -39,7 +39,7 @@ public class BasicIndustry extends AbstractMod
     @Mod.Instance(DOMAIN)
     public static BasicIndustry INSTANCE;
 
-    @SidedProxy(clientSide = "com.builtbroken.industry.ClientProxy", serverSide = "com.builtbroken.industry.CommonProxy")
+    @SidedProxy(clientSide = "com.builtbroken.industry.client.ClientProxy", serverSide = "com.builtbroken.industry.CommonProxy")
     public static CommonProxy proxy;
 
     //Machines

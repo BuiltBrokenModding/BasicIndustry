@@ -1,10 +1,13 @@
 package com.builtbroken.industry.content.machines.dynamic.modules.inv;
 
 import com.builtbroken.industry.content.machines.dynamic.modules.MachineCoreModule;
+import com.builtbroken.mc.api.ISave;
 import com.builtbroken.mc.api.tile.IInventoryProvider;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +40,25 @@ public abstract class InventoryModule<I extends IExternalInventory> extends Mach
         return inventory;
     }
 
+    /**
+     * Creates a new inventory if the current
+     * inventory is invalid or null
+     *
+     * @return inventory instance
+     */
     public abstract I newInventory();
+
+    @Override
+    public boolean canStore(ItemStack stack, ForgeDirection side)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canRemove(ItemStack stack, ForgeDirection side)
+    {
+        return true;
+    }
 
     @Override
     public Collection<ItemStack> getContainedItems()
@@ -154,5 +175,24 @@ public abstract class InventoryModule<I extends IExternalInventory> extends Mach
     public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
         return getInventory().isItemValidForSlot(slot, stack);
+    }
+
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        if (nbt.hasKey("inventory") && getInventory() instanceof ISave)
+        {
+            ((ISave) getInventory()).load(nbt.getCompoundTag("inventory"));
+        }
+    }
+
+    @Override
+    public NBTTagCompound save(NBTTagCompound nbt)
+    {
+        if (getInventory() instanceof ISave)
+        {
+            nbt.setTag("inventory", ((ISave) getInventory()).save(new NBTTagCompound()));
+        }
+        return nbt;
     }
 }
