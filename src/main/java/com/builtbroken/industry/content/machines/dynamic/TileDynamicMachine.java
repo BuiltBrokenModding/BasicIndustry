@@ -7,10 +7,12 @@ import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachi
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
+import com.builtbroken.mc.api.tile.IRotation;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import com.builtbroken.mc.prefab.tile.Tile;
@@ -22,6 +24,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -39,7 +42,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/8/2016.
  */
-public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver, ISidedInventory
+public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver, ISidedInventory, IRotation
 {
     @SideOnly(Side.CLIENT)
     public static IIcon dynamicMachineTexture;
@@ -50,6 +53,8 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     protected Pair<Block, Integer>[] machineSides;
     /** Inventory side connections, 0 = none, 1 = input, 2 = output, 3 = both */
     protected byte[] inventoryConnection = new byte[6];
+
+    ForgeDirection facing;
 
     public TileDynamicMachine()
     {
@@ -90,50 +95,53 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     @Override
     protected boolean onPlayerRightClick(EntityPlayer player, int side, Pos hit)
     {
-        ItemStack heldItem = player.getHeldItem();
-        if (heldItem != null)
+        if(machineSides == null || machineSides[side] == null)
         {
-            if (machineCore == null && heldItem.getItem() instanceof ItemMachineCore)
+            ItemStack heldItem = player.getHeldItem();
+            if (heldItem != null)
+            {
+                if (machineCore == null && heldItem.getItem() instanceof ItemMachineCore)
+                {
+                    if (isServer())
+                    {
+                        final MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
+                        if (core != null)
+                        {
+                            machineCore = core;
+                            machineCore.setHost(this);
+                            machineCore.onJoinWorld();
+
+                            if (!player.capabilities.isCreativeMode)
+                            {
+                                player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                                player.inventoryContainer.detectAndSendChanges();
+                            }
+                            player.addChatMessage(new ChatComponentText("Machine core added to frame."));
+                            onMachineChanged(true);
+                        }
+                        else
+                        {
+                            player.addChatMessage(new ChatComponentText("Error: Core read incorrectly... this is a bug!!!"));
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            if (machineCore != null)
             {
                 if (isServer())
                 {
-                    final MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
-                    if (core != null)
-                    {
-                        machineCore = core;
-                        machineCore.setHost(this);
-                        machineCore.onJoinWorld();
-
-                        if (!player.capabilities.isCreativeMode)
-                        {
-                            player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                            player.inventoryContainer.detectAndSendChanges();
-                        }
-                        player.addChatMessage(new ChatComponentText("Machine core added to frame."));
-                        onMachineChanged(true);
-                    }
-                    else
-                    {
-                        player.addChatMessage(new ChatComponentText("Error: Core read incorrectly... this is a bug!!!"));
-                    }
+                    openGui(player, BasicIndustry.INSTANCE);
                 }
                 return true;
             }
-        }
-
-        if (machineCore != null)
-        {
-            if (isServer())
+            else
             {
-                openGui(player, BasicIndustry.INSTANCE);
-            }
-            return true;
-        }
-        else
-        {
-            if (isServer())
-            {
-                player.addChatMessage(new ChatComponentText("No core installed to interact with machine."));
+                if (isServer())
+                {
+                    player.addChatMessage(new ChatComponentText("No core installed to interact with machine."));
+                }
             }
         }
         return false;
@@ -655,6 +663,32 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     public void closeInventory()
     {
 
+    }
+
+    @Override
+    public void onPlaced(EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+        super.onPlaced(entityLiving, itemStack);
+        setMeta(BlockUtility.determineOrientation(xi(), yi(), zi(), entityLiving));
+    }
+
+    @Override
+    public ForgeDirection getDirection()
+    {
+        if (facing == null)
+        {
+            int meta = world().getBlockMetadata(xi(), yi(), zi());
+            if (meta < ForgeDirection.NORTH.ordinal() || meta > ForgeDirection.EAST.ordinal())
+            {
+                setMeta(ForgeDirection.NORTH.ordinal());
+                facing = ForgeDirection.NORTH;
+            }
+            else
+            {
+                facing = ForgeDirection.getOrientation(meta);
+            }
+        }
+        return facing;
     }
 }
 

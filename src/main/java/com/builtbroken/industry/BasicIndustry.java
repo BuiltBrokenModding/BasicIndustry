@@ -1,5 +1,6 @@
 package com.builtbroken.industry;
 
+import com.builtbroken.industry.content.cover.ItemMachineCover;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemControlModule;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemInvModule;
@@ -51,6 +52,7 @@ public class BasicIndustry extends AbstractMod
     public static Item itemInventoryModules;
     public static Item itemPowerModules;
     public static Item itemControlModules;
+    public static Item itemMachineCover;
 
     public BasicIndustry()
     {
@@ -73,6 +75,8 @@ public class BasicIndustry extends AbstractMod
         itemInventoryModules = manager.newItem("inventoryModule", new ItemInvModule());
         itemPowerModules = manager.newItem("powerModule", new ItemPowerModule());
         itemControlModules = manager.newItem("controlModule", new ItemControlModule());
+
+        itemMachineCover = manager.newItem("machineCover", new ItemMachineCover());
 
         //Register modules
         ItemMachineCore.MachineCores.register();
