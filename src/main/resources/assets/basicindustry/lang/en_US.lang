@@ -4,6 +4,9 @@ tile.basicindustry:dynamicMachine.name=Dynamic Machine Frame
 
 ## Machine Cores
 item.basicindustry:machineCore.grinder.name=Grinder Machine Core
+item.basicindustry:machineCore.crusher.name=Crusher Machine Core
+item.basicindustry:machineCore.sawmill.name=Sawmill Machine Core
+item.basicindustry:machineCore.smelter.name=Smelter Machine Core
 
 ## Inventory Modules
 item.basicindustry:inventoryModule.single.name=Inventory Module

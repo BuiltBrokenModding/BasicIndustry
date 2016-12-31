@@ -36,9 +36,7 @@ public class ContainerDynamicMachine extends ContainerBase
         {
             if (id == CRAFTING_GUI_ID)
             {
-
                 this.addSlotToContainer(new SlotFurnace(player, machine.getMachineCore().getInventory(), 0, 80, 35));
-
 
                 InventoryModule inputInventory = machine.getMachineCore().getInputInventory();
                 InventoryModule outputInventory = machine.getMachineCore().getOutputInventory();
@@ -69,7 +67,6 @@ public class ContainerDynamicMachine extends ContainerBase
                     }
                     else
                     {
-
                         for (int i = 0; i < size; i++)
                         {
                             this.addSlotToContainer(new Slot(inputInventory, i, 10 + col * 18, 15 + row * 18));
@@ -125,9 +122,7 @@ public class ContainerDynamicMachine extends ContainerBase
                 int x = 30;
                 this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.INPUT_INV_SLOT, x, 20));
                 this.addSlotToContainer(new SlotInvModule(machine.getMachineCore().getInventory(), MachineCore.OUTPUT_INV_SLOT, x + 100, 20));
-
                 this.addSlotToContainer(new SlotPowerModule(machine.getMachineCore().getInventory(), MachineCore.POWER_MOD_SLOT, x + 30, 42));
-
                 this.addSlotToContainer(new SlotControlModule(machine.getMachineCore().getInventory(), MachineCore.CONTROL_MOD_SLOT, x + 70, 42));
             }
         }

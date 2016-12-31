@@ -2,9 +2,7 @@ package com.builtbroken.industry.content.machines.dynamic.modules.items;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
-import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
-import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCoreCrusher;
-import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCoreGrinder;
+import com.builtbroken.industry.content.machines.dynamic.modules.cores.*;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
 import cpw.mods.fml.relauncher.Side;
@@ -54,6 +52,12 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
                 case CRUSHER:
                     core = new MachineCoreCrusher(stack);
                     break;
+                case SMELTER:
+                    core = new MachineCoreSmelter(stack);
+                    break;
+                case SAWMILL:
+                    core = new MachineCoreSawmill(stack);
+                    break;
             }
         }
         return core;
@@ -96,7 +100,9 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore>
     public enum MachineCores
     {
         GRINDER("grinder", MachineCoreGrinder.class),
-        CRUSHER("crusher", MachineCoreCrusher.class);
+        CRUSHER("crusher", MachineCoreCrusher.class),
+        SMELTER("smelter", MachineCoreSmelter.class),
+        SAWMILL("sawmill", MachineCoreSawmill.class);
 
         public final String name;
         public final Class<? extends MachineCore> clazz;
