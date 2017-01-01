@@ -1,6 +1,7 @@
 
 ## Machines
 tile.basicindustry:dynamicMachine.name=Dynamic Machine Frame
+tile.basicindustry:furnace.name=Brick Furnace
 
 ## Machine Cores
 item.basicindustry:machineCore.grinder.name=Grinder Machine Core
@@ -30,6 +31,17 @@ item.basicindustry:powerModule.rf.info=Adds compatibility with RF power, Provide
 item.basicindustry:powerModule.ue.info=Adds compatibility with power systems, Provides basic battery storage, Converts power into work
 
 ## Control Module
-item.basicindustry:controllerModule.redstone.name=Redstone Controller
+item.basicindustry:controlModule.redstone.name=Redstone Controller
 
-item.basicindustry:controllerModule.redstone.info=Allows for simple redstone controls
+item.basicindustry:controlModule.redstone.info=Allows for simple redstone controls
+
+## Parts
+item.basicindustry:parts.gearBox.name=Gear Box
+item.basicindustry:parts.frame.face.name=Module Frame Section
+item.basicindustry:parts.frame.name=Module Frame
+item.basicindustry:parts.itemFeed.name=Item Feed
+item.basicindustry:parts.piston.name=Reinforced Piston
+item.basicindustry:parts.machine.face=Machine Frame Section
+
+## Block Cover
+item.basicindustry:blockCover.name=Block Cover

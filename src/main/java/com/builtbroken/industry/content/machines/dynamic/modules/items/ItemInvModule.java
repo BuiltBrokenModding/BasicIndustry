@@ -3,13 +3,17 @@ package com.builtbroken.industry.content.machines.dynamic.modules.items;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
 import com.builtbroken.industry.content.machines.dynamic.modules.inv.*;
+import com.builtbroken.mc.core.content.tool.ItemSimpleCraftingTool;
 import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
+import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
+import com.builtbroken.mc.prefab.recipe.item.sheetmetal.RecipeSheetMetal;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -104,7 +108,31 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule> implement
     @Override
     public void genRecipes(List<IRecipe> recipes)
     {
-        //TODO recipes
+        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(8), "F F", "DFH",
+                'F', ItemParts.Parts.FRAME_FACE.toStack(),
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+
+        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(2), "GCG", "DFH",
+                'F', ItemParts.Parts.MODULE_FRAME.toStack(),
+                'C', Blocks.chest,
+                'G', OreNames.GEAR_IRON,
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+
+        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(1), "GCG", "DFH",
+                'F', ItemParts.Parts.MODULE_FRAME.toStack(),
+                'C', Blocks.hopper,
+                'G', OreNames.GEAR_IRON,
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+
+        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(1), "BDB", "DFH",
+                'F', ItemParts.Parts.MODULE_FRAME.toStack(),
+                'C', Blocks.dispenser,
+                'B', ItemParts.Parts.GEAR_BOX.toStack(),
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
     }
 
     /**
@@ -139,6 +167,11 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule> implement
         public String getSaveID()
         {
             return cachedSaveID;
+        }
+
+        public ItemStack toStack(int n)
+        {
+            return new ItemStack(BasicIndustry.itemMachineCore, n, ordinal());
         }
 
         public static void register()

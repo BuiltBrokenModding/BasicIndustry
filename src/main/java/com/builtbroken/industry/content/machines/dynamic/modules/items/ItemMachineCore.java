@@ -3,6 +3,7 @@ package com.builtbroken.industry.content.machines.dynamic.modules.items;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.*;
+import com.builtbroken.mc.core.content.parts.CraftingParts;
 import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.lib.helper.recipe.UniversalRecipe;
@@ -12,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -121,12 +123,23 @@ public class ItemMachineCore extends ItemAbstractModule<MachineCore> implements 
                 'B', ItemParts.Parts.GEAR_BOX.toStack()));
 
         recipes.add(newShapedRecipe(new ItemStack(this, 1, MachineCores.SMELTER.ordinal()),
-                "CIC", "BFB", "BIB",
+                "CIC", "lFl", "BIB",
                 'C', UniversalRecipe.CIRCUIT_T1.get(),
                 'G', OreNames.GEAR_IRON,
                 'I', ItemParts.Parts.ITEM_FEED.toStack(),
-                'P', ItemParts.Parts.PISTON.toStack(),
-                'B', ItemParts.Parts.GEAR_BOX.toStack()));
+                'F', Blocks.furnace,
+                'B', ItemParts.Parts.GEAR_BOX.toStack(),
+                'F', BasicIndustry.blockBrickFurnace,
+                'l', CraftingParts.COPPER_COIL.toStack()));
+
+        recipes.add(newShapedRecipe(new ItemStack(this, 1, MachineCores.SAWMILL.ordinal()),
+                "CIC", "lBl", "BIB",
+                'C', UniversalRecipe.CIRCUIT_T1.get(),
+                'G', OreNames.GEAR_IRON,
+                'I', ItemParts.Parts.ITEM_FEED.toStack(),
+                'F', Blocks.furnace,
+                'B', ItemParts.Parts.GEAR_BOX.toStack(),
+                'l', OreNames.PLATE_IRON));
     }
 
     public enum MachineCores

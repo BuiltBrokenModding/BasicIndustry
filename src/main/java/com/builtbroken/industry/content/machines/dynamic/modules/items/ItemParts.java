@@ -35,11 +35,44 @@ public class ItemParts extends ItemAbstract implements IRecipeContainer
     @Override
     public void genRecipes(List<IRecipe> recipes)
     {
-        recipes.add(newShapedRecipe(Parts.GEAR_BOX.toStack(), "GRG", "GPG", "GRG", 'G', OreNames.GEAR_IRON, 'P', OreNames.PLATE_IRON, 'R', OreNames.ROD_IRON));
-        recipes.add(new RecipeSheetMetal(Parts.FRAME_FACE.toStack(), "BRB", "HPD", "BRB", 'B', OreNames.SCREW_IRON, 'P', OreNames.PLATE_IRON, 'R', OreNames.ROD_IRON, 'D', ItemSimpleCraftingTool.getDrill(), 'H', ItemSimpleCraftingTool.getHammer()));
-        recipes.add(new RecipeSheetMetal(Parts.MODULE_FRAME.toStack(), "FFF", "FHF", "FFF", 'F', Parts.FRAME_FACE.toStack(), 'H', ItemSimpleCraftingTool.getHammer()));
-        recipes.add(new RecipeSheetMetal(Parts.ITEM_FEED.toStack(), "P P", "RPR", "DHC", 'P', ItemSheetMetal.SheetMetal.HALF.stack(), 'R', OreNames.ROD_IRON, 'C', ItemSheetMetalTools.getShears(), 'D', ItemSimpleCraftingTool.getDrill(), 'H', ItemSimpleCraftingTool.getHammer()));
-        recipes.add(new RecipeSheetMetal(Parts.PISTON.toStack(), "GBG", "RPR", "DHC", 'P', OreNames.PLATE_IRON, 'B', Blocks.piston, 'R', OreNames.ROD_IRON, 'C', ItemSheetMetalTools.getShears(), 'D', ItemSimpleCraftingTool.getDrill(), 'H', ItemSimpleCraftingTool.getHammer()));
+        recipes.add(newShapedRecipe(Parts.GEAR_BOX.toStack(),
+                "GRG", "GPG", "GRG",
+                'G', OreNames.GEAR_IRON,
+                'P', OreNames.PLATE_IRON,
+                'R', OreNames.ROD_IRON));
+        recipes.add(new RecipeSheetMetal(Parts.FRAME_FACE.toStack(4),
+                "BRB", "HPD", "BRB",
+                'B', OreNames.SCREW_IRON,
+                'P', OreNames.PLATE_IRON,
+                'R', OreNames.ROD_IRON,
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+        recipes.add(new RecipeSheetMetal(Parts.MODULE_FRAME.toStack(),
+                "FFF", "FHF", "FFF",
+                'F', Parts.FRAME_FACE.toStack(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+        recipes.add(new RecipeSheetMetal(Parts.ITEM_FEED.toStack(2),
+                "P P", "RPR", "DHC",
+                'P', ItemSheetMetal.SheetMetal.HALF.stack(),
+                'R', OreNames.ROD_IRON,
+                'C', ItemSheetMetalTools.getShears(),
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+        recipes.add(new RecipeSheetMetal(Parts.PISTON.toStack(),
+                "GBG", "RPR", "DHC",
+                'P', OreNames.PLATE_IRON,
+                'B', Blocks.piston,
+                'R', OreNames.ROD_IRON,
+                'C', ItemSheetMetalTools.getShears(),
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
+        recipes.add(new RecipeSheetMetal(Parts.MACHINE_FACE.toStack(2),
+                "RCR", "HRD", "RIR",
+                'R', OreNames.ROD_IRON,
+                'I', OreNames.INGOT_IRON,
+                'C', ItemSheetMetalTools.getShears(),
+                'D', ItemSimpleCraftingTool.getDrill(),
+                'H', ItemSimpleCraftingTool.getHammer()));
     }
 
     @Override
@@ -90,7 +123,8 @@ public class ItemParts extends ItemAbstract implements IRecipeContainer
         FRAME_FACE("frame.face"),
         MODULE_FRAME("frame"),
         ITEM_FEED("itemFeed"),
-        PISTON("piston");
+        PISTON("piston"),
+        MACHINE_FACE("machine.face");
 
         public final String name;
 
@@ -100,6 +134,11 @@ public class ItemParts extends ItemAbstract implements IRecipeContainer
         Parts(String name)
         {
             this.name = name;
+        }
+
+        public ItemStack toStack(int n)
+        {
+            return new ItemStack(BasicIndustry.itemParts, n, ordinal());
         }
 
         public ItemStack toStack()

@@ -4,14 +4,17 @@ import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.machines.dynamic.modules.ISBRMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemParts;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
 import com.builtbroken.mc.api.tile.IRotation;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
+import com.builtbroken.mc.core.content.tool.ItemSimpleCraftingTool;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketType;
+import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.lib.helper.BlockUtility;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
@@ -28,6 +31,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
@@ -42,7 +46,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 1/8/2016.
  */
-public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver, ISidedInventory, IRotation
+public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, IGuiTile, IRemovable.ISneakPickup, IPacketIDReceiver, ISidedInventory, IRotation, IRecipeContainer
 {
     @SideOnly(Side.CLIENT)
     public static IIcon dynamicMachineTexture;
@@ -689,6 +693,12 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             }
         }
         return facing;
+    }
+
+    @Override
+    public void genRecipes(List<IRecipe> recipes)
+    {
+        recipes.add(newShapedRecipe(BasicIndustry.blockDynamicMachine, "FDF", "F F", "FHF", 'F', ItemParts.Parts.MACHINE_FACE.toStack(), 'D', ItemSimpleCraftingTool.getDrill(), 'H', ItemSimpleCraftingTool.getHammer()));
     }
 }
 
