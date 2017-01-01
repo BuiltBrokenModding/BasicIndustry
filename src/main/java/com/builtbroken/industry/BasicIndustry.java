@@ -2,10 +2,9 @@ package com.builtbroken.industry;
 
 import com.builtbroken.industry.content.cover.ItemMachineCover;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemControlModule;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemInvModule;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemPowerModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.furnace.TileFurnace;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.*;
+import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
@@ -45,7 +44,7 @@ public class BasicIndustry extends AbstractMod
 
     //Machines
     public static Block blockDynamicMachine;
-
+    public static Block blockBrickFurnace;
 
     //Items
     public static Item itemMachineCore;
@@ -53,6 +52,11 @@ public class BasicIndustry extends AbstractMod
     public static Item itemPowerModules;
     public static Item itemControlModules;
     public static Item itemMachineCover;
+    public static Item itemParts;
+
+    //Configs
+    public static boolean doInputSlotValidationChecks = true;
+
 
     public BasicIndustry()
     {
@@ -63,20 +67,29 @@ public class BasicIndustry extends AbstractMod
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
+        Engine.requestOres();
+        Engine.requestResources();
+        Engine.requestSheetMetalContent();
+        //Engine.requestMultiBlock(); TODO enable when needed
+        Engine.requestSimpleTools();
+        Engine.requestCircuits();
+        Engine.requestCraftingParts();
 
         //Creative tab
         manager.setTab(new ModCreativeTab(NAME));
 
         //Machines
         blockDynamicMachine = manager.newBlock("BIDynamicMachine", TileDynamicMachine.class);
+        blockBrickFurnace = manager.newBlock("BIBrickFurnace", TileFurnace.class);
 
         //Items
-        itemMachineCore = manager.newItem("machineCore", new ItemMachineCore());
-        itemInventoryModules = manager.newItem("inventoryModule", new ItemInvModule());
-        itemPowerModules = manager.newItem("powerModule", new ItemPowerModule());
-        itemControlModules = manager.newItem("controlModule", new ItemControlModule());
+        itemMachineCore = manager.newItem("BIMachineCore", new ItemMachineCore());
+        itemInventoryModules = manager.newItem("BIInventoryModule", new ItemInvModule());
+        itemPowerModules = manager.newItem("BIPowerModule", new ItemPowerModule());
+        itemControlModules = manager.newItem("BIControlModule", new ItemControlModule());
 
-        itemMachineCover = manager.newItem("machineCover", new ItemMachineCover());
+        itemMachineCover = manager.newItem("BIMachineCover", new ItemMachineCover());
+        itemParts = manager.newItem("BIModuleParts", new ItemParts());
 
         //Register modules
         ItemMachineCore.MachineCores.register();
