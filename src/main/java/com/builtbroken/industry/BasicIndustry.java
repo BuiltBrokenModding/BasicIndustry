@@ -7,6 +7,7 @@ import com.builtbroken.industry.content.machines.dynamic.modules.items.*;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
+import com.builtbroken.mc.lib.mod.compat.nei.NEIProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -89,6 +90,7 @@ public class BasicIndustry extends AbstractMod
         itemControlModules = manager.newItem("BIControlModule", new ItemControlModule());
 
         itemMachineCover = manager.newItem("BIMachineCover", new ItemMachineCover());
+        NEIProxy.hideItem(itemMachineCore);
         itemParts = manager.newItem("BIModuleParts", new ItemParts());
 
         //Register modules

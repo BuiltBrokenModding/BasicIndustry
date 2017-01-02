@@ -99,7 +99,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     @Override
     protected boolean onPlayerRightClick(EntityPlayer player, int side, Pos hit)
     {
-        if(machineSides == null || machineSides[side] == null)
+        if (machineSides == null || machineSides[side] == null)
         {
             ItemStack heldItem = player.getHeldItem();
             if (heldItem != null)
@@ -274,6 +274,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
         {
             machineCore = null;
         }
+        this.worldObj.markBlockRangeForRenderUpdate(this.xCoord, this.yCoord, this.zCoord, this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override

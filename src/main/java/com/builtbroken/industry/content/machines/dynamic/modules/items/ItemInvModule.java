@@ -113,21 +113,21 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule> implement
                 'D', ItemSimpleCraftingTool.getDrill(),
                 'H', ItemSimpleCraftingTool.getHammer()));
 
-        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(2), "GCG", "DFH",
+        recipes.add(new RecipeSheetMetal(InvModules.CHEST.toStack(2), "GCG", "DFH",
                 'F', ItemParts.Parts.MODULE_FRAME.toStack(),
                 'C', Blocks.chest,
                 'G', OreNames.GEAR_IRON,
                 'D', ItemSimpleCraftingTool.getDrill(),
                 'H', ItemSimpleCraftingTool.getHammer()));
 
-        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(1), "GCG", "DFH",
+        recipes.add(new RecipeSheetMetal(InvModules.HOPPER.toStack(1), "GCG", "DFH",
                 'F', ItemParts.Parts.MODULE_FRAME.toStack(),
                 'C', Blocks.hopper,
                 'G', OreNames.GEAR_IRON,
                 'D', ItemSimpleCraftingTool.getDrill(),
                 'H', ItemSimpleCraftingTool.getHammer()));
 
-        recipes.add(new RecipeSheetMetal(InvModules.SINGLE.toStack(1), "BDB", "DFH",
+        recipes.add(new RecipeSheetMetal(InvModules.DISPENSER.toStack(1), "BDB", "DFH",
                 'F', ItemParts.Parts.MODULE_FRAME.toStack(),
                 'C', Blocks.dispenser,
                 'B', ItemParts.Parts.GEAR_BOX.toStack(),
@@ -171,7 +171,7 @@ public class ItemInvModule extends ItemAbstractModule<InventoryModule> implement
 
         public ItemStack toStack(int n)
         {
-            return new ItemStack(BasicIndustry.itemMachineCore, n, ordinal());
+            return new ItemStack(BasicIndustry.itemInventoryModules, n, ordinal());
         }
 
         public static void register()

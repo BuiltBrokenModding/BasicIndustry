@@ -102,7 +102,7 @@ public class ItemParts extends ItemAbstract implements IRecipeContainer
         super.registerIcons(reg);
         for (Parts module : Parts.values())
         {
-            module.icon = reg.registerIcon(BasicIndustry.PREFIX + "module.parts." + module.name);
+            module.icon = reg.registerIcon(BasicIndustry.PREFIX + "module.part." + module.name);
         }
     }
 
