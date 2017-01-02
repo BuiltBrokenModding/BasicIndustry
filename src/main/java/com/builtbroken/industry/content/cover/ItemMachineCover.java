@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,53 +31,96 @@ public class ItemMachineCover extends ItemAbstract
         setUnlocalizedName(BasicIndustry.PREFIX + "blockCover");
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b)
+    {
+        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("data"))
+        {
+            NBTTagCompound tag = stack.getTagCompound().getCompoundTag("data");
+            if (tag.hasKey("stack"))
+            {
+                ItemStack blockStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+                if (blockStack != null)
+                {
+                    list.add("Block: " + blockStack.getUnlocalizedName());
+                    return;
+                }
+            }
+        }
+        list.add("Corrupted NBT data!!");
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list)
+    public void getSubItems(Item itemCover, CreativeTabs tab, List list)
     {
         if (coverCache == null)
         {
             coverCache = new ArrayList();
-            for (Object o : Block.blockRegistry)
+            for (Object entry : Block.blockRegistry)
             {
-                Block b = (Block) o;
-                if (b != null && isBlockValid(b))
+                final Block block = (Block) entry;
+                if (block != null && block.getMaterial().isSolid() && !block.getMaterial().isReplaceable())
                 {
-                    List<ItemStack> stacks = new ArrayList();
-                    for (CreativeTabs ct : item.getCreativeTabs())
+                    try
                     {
-                        b.getSubBlocks(item, ct, stacks);
-                    }
-                    if (stacks != null && !stacks.isEmpty())
-                    {
-                        for (ItemStack stack : stacks)
+                        if (block != null && isBlockValid(block))
                         {
-                            if (stack.getTagCompound() == null && !b.hasTileEntity(stack.getItemDamage()))
+                            List<ItemStack> stacks = new ArrayList();
+                            Item item = Item.getItemFromBlock(block);
+
+                            for (CreativeTabs ct : item.getCreativeTabs())
                             {
-                                coverCache.add(new ItemStackWrapper(stack));
+                                block.getSubBlocks(item, ct, stacks);
+                            }
+                            if (stacks != null && !stacks.isEmpty())
+                            {
+                                for (ItemStack stack : stacks)
+                                {
+                                    if (stack.getTagCompound() == null && !block.hasTileEntity(stack.getItemDamage()))
+                                    {
+                                        boolean npe = false;
+                                        for (int i = 0; i < 6; i++)
+                                        {
+                                            if (block.getIcon(i, stack.getItemDamage()) == null)
+                                            {
+                                                npe = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!npe)
+                                        {
+                                            coverCache.add(new ItemStackWrapper(stack));
+                                        }
+                                    }
+                                }
                             }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        BasicIndustry.INSTANCE.logger().error("Error while building cover cache for " + block);
                     }
                 }
             }
         }
         for (ItemStackWrapper stack : coverCache)
         {
-            ItemStack coverStack = new ItemStack(item);
-            encodeBlockMetaPair(coverStack, Block.getBlockFromItem(stack.itemStack.getItem()), stack.itemStack.getItemDamage());
+            ItemStack coverStack = new ItemStack(itemCover);
+            encodeBlockMetaPair(coverStack, stack.itemStack);
             list.add(coverStack);
         }
     }
 
-    public static void encodeBlockMetaPair(ItemStack stack, Block block, int meta)
+    public static void encodeBlockMetaPair(ItemStack stack, ItemStack blockStack)
     {
         if (stack.getTagCompound() == null)
         {
             stack.setTagCompound(new NBTTagCompound());
         }
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("block", Block.blockRegistry.getNameForObject(block));
-        tag.setInteger("meta", meta);
+        tag.setTag("stack", blockStack.writeToNBT(new NBTTagCompound()));
         stack.getTagCompound().setTag("data", tag);
     }
 
@@ -84,10 +128,15 @@ public class ItemMachineCover extends ItemAbstract
     {
         if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("data"))
         {
-            String name = stack.getTagCompound().getCompoundTag("data").getString("block");
-            if (name != null && !name.isEmpty())
+            NBTTagCompound tag = stack.getTagCompound().getCompoundTag("data");
+            if (tag.hasKey("stack"))
             {
-                return (Block) Block.blockRegistry.getObject(name);
+                ItemStack blockStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+                if (blockStack != null)
+                {
+                    Block block = Block.getBlockFromItem(blockStack.getItem());
+                    return block;
+                }
             }
         }
         return null;
@@ -97,7 +146,15 @@ public class ItemMachineCover extends ItemAbstract
     {
         if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("data"))
         {
-            return stack.getTagCompound().getCompoundTag("data").getInteger("meta");
+            NBTTagCompound tag = stack.getTagCompound().getCompoundTag("data");
+            if (tag.hasKey("stack"))
+            {
+                ItemStack blockStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("stack"));
+                if (blockStack != null)
+                {
+                    return Math.min(blockStack.getItemDamage(), 15);
+                }
+            }
         }
         return 0;
     }

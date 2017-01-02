@@ -32,9 +32,9 @@ public class ItemRendererMachineCover implements IItemRenderer
         Block block = ItemMachineCover.getBlock(item);
         if (block == null)
         {
-            block = Blocks.stone;
+            block = Blocks.lava;
         }
-        RenderUtility.renderCube(0, 0, 0, 1, 1, 1, block, null, ItemMachineCover.getMeta(item));
+        RenderUtility.renderCube(0, 0, .8, 1, 1, 1, block, null, ItemMachineCover.getMeta(item));
         GL11.glPopMatrix();
     }
 }
