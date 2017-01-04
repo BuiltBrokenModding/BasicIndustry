@@ -1,6 +1,7 @@
 package com.builtbroken.industry.content.machines.dynamic.modules.items;
 
 import com.builtbroken.industry.BasicIndustry;
+import com.builtbroken.industry.content.items.ItemParts;
 import com.builtbroken.industry.content.machines.dynamic.MachineModuleBuilder;
 import com.builtbroken.industry.content.machines.dynamic.modules.inv.*;
 import com.builtbroken.mc.core.content.tool.ItemSimpleCraftingTool;

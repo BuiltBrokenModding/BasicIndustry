@@ -1,6 +1,7 @@
 package com.builtbroken.industry;
 
 import com.builtbroken.industry.content.cover.ItemMachineCover;
+import com.builtbroken.industry.content.items.ItemParts;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.furnace.TileFurnace;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.*;

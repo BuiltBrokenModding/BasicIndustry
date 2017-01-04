@@ -1,10 +1,11 @@
 package com.builtbroken.industry.content.machines.dynamic;
 
 import com.builtbroken.industry.BasicIndustry;
+import com.builtbroken.industry.content.cover.ItemMachineCover;
 import com.builtbroken.industry.content.machines.dynamic.modules.ISBRMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemParts;
+import com.builtbroken.industry.content.items.ItemParts;
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.tile.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
@@ -104,30 +105,37 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
             ItemStack heldItem = player.getHeldItem();
             if (heldItem != null)
             {
-                if (machineCore == null && heldItem.getItem() instanceof ItemMachineCore)
+                if (heldItem.getItem() instanceof ItemMachineCore)
                 {
-                    if (isServer())
+                    if (machineCore == null)
                     {
-                        final MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
-                        if (core != null)
+                        if (isServer())
                         {
-                            machineCore = core;
-                            machineCore.setHost(this);
-                            machineCore.onJoinWorld();
-
-                            if (!player.capabilities.isCreativeMode)
+                            final MachineCore core = ((ItemMachineCore) heldItem.getItem()).getModule(heldItem);
+                            if (core != null)
                             {
-                                player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                                player.inventoryContainer.detectAndSendChanges();
+                                machineCore = core;
+                                machineCore.setHost(this);
+                                machineCore.onJoinWorld();
+
+                                if (!player.capabilities.isCreativeMode)
+                                {
+                                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                                    player.inventoryContainer.detectAndSendChanges();
+                                }
+                                player.addChatMessage(new ChatComponentText("Machine core added to frame."));
+                                onMachineChanged(true);
                             }
-                            player.addChatMessage(new ChatComponentText("Machine core added to frame."));
-                            onMachineChanged(true);
+                            else
+                            {
+                                player.addChatMessage(new ChatComponentText("Error: Core read incorrectly... this is a bug!!!"));
+                            }
                         }
-                        else
-                        {
-                            player.addChatMessage(new ChatComponentText("Error: Core read incorrectly... this is a bug!!!"));
-                        }
+                        return true;
                     }
+                }
+                else if (heldItem.getItem() instanceof ItemMachineCover)
+                {
                     return true;
                 }
             }

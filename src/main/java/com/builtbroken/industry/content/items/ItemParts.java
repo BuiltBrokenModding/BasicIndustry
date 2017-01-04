@@ -1,4 +1,4 @@
-package com.builtbroken.industry.content.machines.dynamic.modules.items;
+package com.builtbroken.industry.content.items;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.core.content.resources.items.ItemSheetMetal;
