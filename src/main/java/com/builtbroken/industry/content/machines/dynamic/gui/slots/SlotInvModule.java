@@ -26,4 +26,10 @@ public class SlotInvModule extends Slot
         }
         return false;
     }
+
+    @Override
+    public int getSlotStackLimit()
+    {
+        return 1;
+    }
 }
