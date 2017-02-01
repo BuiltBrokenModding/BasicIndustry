@@ -2,7 +2,6 @@ package com.builtbroken.industry.content.machines.dynamic;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.content.cover.ItemMachineCover;
-import com.builtbroken.industry.content.machines.dynamic.modules.ISBRMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
 import com.builtbroken.industry.content.items.ItemParts;

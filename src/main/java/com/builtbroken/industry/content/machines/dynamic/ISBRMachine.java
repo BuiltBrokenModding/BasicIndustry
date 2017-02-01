@@ -1,6 +1,5 @@
-package com.builtbroken.industry.content.machines.dynamic.modules;
+package com.builtbroken.industry.content.machines.dynamic;
 
-import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCore;
 import com.builtbroken.mc.lib.render.RenderUtility;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

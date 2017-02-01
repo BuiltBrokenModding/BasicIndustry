@@ -3,7 +3,7 @@ package com.builtbroken.industry.client;
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.industry.CommonProxy;
 import com.builtbroken.industry.content.cover.ItemRendererMachineCover;
-import com.builtbroken.industry.content.machines.dynamic.modules.ISBRMachine;
+import com.builtbroken.industry.content.machines.dynamic.ISBRMachine;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.client.MinecraftForgeClient;
 
