@@ -1,6 +1,6 @@
 package com.builtbroken.industry.content.power.wires;
 
-import com.builtbroken.mc.api.IGrid;
+import com.builtbroken.mc.api.grid.IGrid;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.builtbroken.industry.content.power.wires;
 
 import com.builtbroken.industry.BasicIndustry;
+import com.builtbroken.mc.api.grid.IGridNode;
 import com.builtbroken.mc.api.tile.ConnectionType;
-import com.builtbroken.mc.api.tile.IGridProvider;
 import com.builtbroken.mc.api.tile.ITileConnection;
 import com.builtbroken.mc.core.network.IPacketReceiver;
 import com.builtbroken.mc.core.network.packet.PacketTile;
@@ -27,7 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 2/1/2017.
  */
-public class TileWire extends Tile implements IPacketReceiver, IGridProvider<WireNetwork>, ITileConnection
+public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNetwork>, ITileConnection
 {
     //TODO replace with casing object, allows for none-block materials
     public Block casingMaterial;
@@ -56,15 +56,33 @@ public class TileWire extends Tile implements IPacketReceiver, IGridProvider<Wir
     @Override
     public void onNeighborChanged(Pos pos)
     {
-        //TODO update network connections
+        //IF we do not have a grid, find or make one
+        if (getGrid() == null)
+        {
+            findOrMakeGrid();
+        }
+
+        //TODO unit test
+        final TileEntity tile = pos.getTileEntity(world());
+        final ForgeDirection dir = toPos().sub(pos).floor().toForgeDirection();
+        if (tile instanceof ITileConnection)
+        {
+            if (((ITileConnection) tile).canConnect(this, ConnectionType.UE_POWER, dir))
+            {
+                checkForConnection(dir, tile);
+            }
+            else if (hasWireConnection(dir))
+            {
+                refreshConnections();
+            }
+        }
+        else if (hasWireConnection(dir))
+        {
+            refreshConnections();
+        }
     }
 
-    /**
-     * Called to refresh connections and do other connection
-     * based logic
-     *
-     * @return true if connections changed
-     */
+    @Override
     public boolean refreshConnections()
     {
         final Pos center = new Pos(this);
@@ -72,50 +90,70 @@ public class TileWire extends Tile implements IPacketReceiver, IGridProvider<Wir
         //IF we do not have a grid, find or make one
         if (getGrid() == null)
         {
-            //Look for an existing network
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            {
-                Pos pos = center.add(direction);
-                TileEntity tile = pos.getTileEntity(world());
-                if (tile instanceof TileWire && ((TileWire) tile).getGrid() != null)
-                {
-                    setGrid(((TileWire) tile).getGrid());
-                    break;
-                }
-            }
-            if (getGrid() == null)
-            {
-                setGrid(WireNetwork.newGrid());
-            }
+            findOrMakeGrid();
         }
 
         //Update connections
-        byte prevConnections = wireConnections;
+        final byte prevConnections = wireConnections;
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
-            Pos pos = center.add(direction);
-            TileEntity tile = pos.getTileEntity(world());
-            if (tile instanceof ITileConnection && ((ITileConnection) tile).canConnect(this, ConnectionType.UE_POWER, direction))
-            {
-                //If wire check for network merges
-                if (tile instanceof TileWire)
-                {
-                    if (((TileWire) tile).getGrid() != getGrid())
-                    {
-                        WireNetworkManager.merge(((TileWire) tile).getGrid(), getGrid());
-                    }
-                }
-                setWireConnection(direction, true);
-            }
-            else
-            {
-                setWireConnection(direction, false);
-            }
+            final Pos pos = center.add(direction);
+            final TileEntity tile = pos.getTileEntity(world());
+            checkForConnection(direction, tile);
         }
         if (prevConnections != wireConnections)
         {
             sendDescPacket();
             return true;
+        }
+        return false;
+    }
+
+    private void findOrMakeGrid()
+    {
+        final Pos center = new Pos(this);
+        //Look for an existing network
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+        {
+            Pos pos = center.add(direction);
+            TileEntity tile = pos.getTileEntity(world());
+            if (tile instanceof TileWire && ((TileWire) tile).getGrid() != null)
+            {
+                setGrid(((TileWire) tile).getGrid());
+                break;
+            }
+        }
+        if (getGrid() == null)
+        {
+            setGrid(WireNetwork.newGrid());
+        }
+    }
+
+    /**
+     * Checks if a connection should be made
+     *
+     * @param direction - direction from this tile
+     * @param tile      - tile to check for connection
+     * @return true if a connection was made
+     */
+    private boolean checkForConnection(ForgeDirection direction, TileEntity tile)
+    {
+        if (tile instanceof ITileConnection && ((ITileConnection) tile).canConnect(this, ConnectionType.UE_POWER, direction))
+        {
+            //If wire check for network merges
+            if (tile instanceof TileWire)
+            {
+                if (((TileWire) tile).getGrid() != getGrid())
+                {
+                    WireNetworkManager.merge(((TileWire) tile).getGrid(), getGrid());
+                }
+            }
+            setWireConnection(direction, true);
+            return true;
+        }
+        else
+        {
+            setWireConnection(direction, false);
         }
         return false;
     }

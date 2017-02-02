@@ -5,17 +5,18 @@ import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
 import com.builtbroken.mc.api.recipe.MachineRecipeType;
 import com.builtbroken.mc.api.tile.IGuiTile;
-import com.builtbroken.mc.api.tile.IInventoryProvider;
 import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.lib.transform.vector.Pos;
 import com.builtbroken.mc.prefab.inventory.InventoryUtility;
 import com.builtbroken.mc.prefab.tile.TileModuleMachine;
+import com.builtbroken.mc.prefab.tile.module.TileModuleInventory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +30,7 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 12/31/2016.
  */
-public class TileFurnace extends TileModuleMachine implements IInventoryProvider, IRecipeContainer, IGuiTile
+public class TileFurnace extends TileModuleMachine implements IRecipeContainer, IGuiTile
 {
     private static final int[] slotsTop = new int[]{0, 1};
     private static final int[] slotsBottom = new int[]{0, 1, 4};
@@ -60,7 +61,12 @@ public class TileFurnace extends TileModuleMachine implements IInventoryProvider
         super("furnace", Material.rock);
         this.resistance = 1;
         this.hardness = 5;
-        this.addInventoryModule(5);
+    }
+
+    @Override
+    protected IInventory createInventory()
+    {
+        return new TileModuleInventory(this, 5);
     }
 
     @Override
