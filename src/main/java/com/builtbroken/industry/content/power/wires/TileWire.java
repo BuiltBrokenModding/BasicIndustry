@@ -85,7 +85,7 @@ public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNet
     @Override
     public boolean refreshConnections()
     {
-        final Pos center = new Pos(this);
+        final Pos center = new Pos((TileEntity)this);
 
         //IF we do not have a grid, find or make one
         if (getGrid() == null)
@@ -111,7 +111,7 @@ public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNet
 
     private void findOrMakeGrid()
     {
-        final Pos center = new Pos(this);
+        final Pos center = new Pos((TileEntity)this);
         //Look for an existing network
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
