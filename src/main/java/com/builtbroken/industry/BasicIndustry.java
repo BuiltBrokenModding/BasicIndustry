@@ -8,7 +8,7 @@ import com.builtbroken.industry.content.machines.dynamic.modules.items.*;
 import com.builtbroken.mc.core.Engine;
 import com.builtbroken.mc.lib.mod.AbstractMod;
 import com.builtbroken.mc.lib.mod.ModCreativeTab;
-import com.builtbroken.mc.lib.mod.compat.nei.NEIProxy;
+import com.builtbroken.mc.mods.nei.NEIProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
