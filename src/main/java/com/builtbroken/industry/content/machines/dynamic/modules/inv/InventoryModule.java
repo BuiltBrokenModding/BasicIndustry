@@ -2,7 +2,7 @@ package com.builtbroken.industry.content.machines.dynamic.modules.inv;
 
 import com.builtbroken.industry.content.machines.dynamic.modules.MachineCoreModule;
 import com.builtbroken.mc.api.ISave;
-import com.builtbroken.mc.api.tile.IInventoryProvider;
+import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.api.tile.node.IExternalInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

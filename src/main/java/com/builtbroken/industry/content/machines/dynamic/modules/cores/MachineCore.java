@@ -11,8 +11,8 @@ import com.builtbroken.industry.content.machines.dynamic.modules.power.PowerModu
 import com.builtbroken.jlib.type.Pair;
 import com.builtbroken.mc.api.modules.IModule;
 import com.builtbroken.mc.api.recipe.IMachineRecipeHandler;
-import com.builtbroken.mc.api.tile.IGuiTile;
-import com.builtbroken.mc.api.tile.IInventoryProvider;
+import com.builtbroken.mc.api.tile.access.IGuiTile;
+import com.builtbroken.mc.api.tile.provider.IInventoryProvider;
 import com.builtbroken.mc.core.network.IPacketIDReceiver;
 import com.builtbroken.mc.core.network.packet.PacketTile;
 import com.builtbroken.mc.core.network.packet.PacketType;

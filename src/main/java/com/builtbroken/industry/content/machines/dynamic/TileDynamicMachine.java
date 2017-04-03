@@ -6,9 +6,9 @@ import com.builtbroken.industry.content.machines.dynamic.modules.cores.MachineCo
 import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
 import com.builtbroken.industry.content.items.ItemParts;
 import com.builtbroken.jlib.type.Pair;
-import com.builtbroken.mc.api.tile.IGuiTile;
+import com.builtbroken.mc.api.tile.access.IGuiTile;
 import com.builtbroken.mc.api.tile.IRemovable;
-import com.builtbroken.mc.api.tile.IRotation;
+import com.builtbroken.mc.api.tile.access.IRotation;
 import com.builtbroken.mc.api.tile.ITileModuleProvider;
 import com.builtbroken.mc.api.tile.node.ITileModule;
 import com.builtbroken.mc.core.content.tool.ItemSimpleCraftingTool;
