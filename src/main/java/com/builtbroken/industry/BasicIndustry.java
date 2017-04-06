@@ -23,7 +23,7 @@ import net.minecraft.item.ItemStack;
  * <p>
  * Created by Dark(robert, DarkGuardsman) on 1/7/2015.
  */
-@Mod(modid = BasicIndustry.DOMAIN, name = BasicIndustry.NAME, version = BasicIndustry.VERSION, dependencies = "required-after:VoltzEngine")
+@Mod(modid = BasicIndustry.DOMAIN, name = BasicIndustry.NAME, version = BasicIndustry.VERSION, dependencies = "required-after:voltzengine")
 public class BasicIndustry extends AbstractMod
 {
     /** Name of the channel and mod ID. */
