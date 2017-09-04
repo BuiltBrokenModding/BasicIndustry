@@ -81,7 +81,7 @@ public class GuiDynamicMachine extends GuiContainerBase
         int id = button.id;
         if (id >= 0 && id <= 5)
         {
-            Engine.instance.packetHandler.sendToServer(new PacketTile(machine, 2, id));
+            Engine.packetHandler.sendToServer(new PacketTile(machine, 2, id));
             return;
         }
     }

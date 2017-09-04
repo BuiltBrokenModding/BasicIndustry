@@ -689,7 +689,7 @@ public class TileDynamicMachine extends TileEnt implements ITileModuleProvider, 
     {
         if (facing == null)
         {
-            int meta = world().getBlockMetadata(xi(), yi(), zi());
+            int meta = oldWorld().getBlockMetadata(xi(), yi(), zi());
             if (meta < ForgeDirection.NORTH.ordinal() || meta > ForgeDirection.EAST.ordinal())
             {
                 setMeta(ForgeDirection.NORTH.ordinal());

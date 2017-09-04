@@ -1,6 +1,6 @@
 package com.builtbroken.industry;
 
-import com.builtbroken.mc.lib.mod.AbstractProxy;
+import com.builtbroken.mc.framework.mod.AbstractProxy;
 
 /**
  * Created by robert on 1/7/2015.

@@ -92,7 +92,7 @@ public class MachineModule extends AbstractModule implements ITileModule, ISave
      */
     public void getContainedItems(final List<ItemStack> items)
     {
-        if (item != null)
+        if (getItem() != null)
         {
             items.add(toStack());
         }

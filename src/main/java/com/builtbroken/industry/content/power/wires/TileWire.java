@@ -63,7 +63,7 @@ public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNet
         }
 
         //TODO unit test
-        final TileEntity tile = pos.getTileEntity(world());
+        final TileEntity tile = pos.getTileEntity(oldWorld());
         final ForgeDirection dir = toPos().sub(pos).floor().toForgeDirection();
         if (tile instanceof ITileConnection)
         {
@@ -98,7 +98,7 @@ public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNet
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
             final Pos pos = center.add(direction);
-            final TileEntity tile = pos.getTileEntity(world());
+            final TileEntity tile = pos.getTileEntity(oldWorld());
             checkForConnection(direction, tile);
         }
         if (prevConnections != wireConnections)
@@ -116,7 +116,7 @@ public class TileWire extends Tile implements IPacketReceiver, IGridNode<WireNet
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
         {
             Pos pos = center.add(direction);
-            TileEntity tile = pos.getTileEntity(world());
+            TileEntity tile = pos.getTileEntity(oldWorld());
             if (tile instanceof TileWire && ((TileWire) tile).getGrid() != null)
             {
                 setGrid(((TileWire) tile).getGrid());

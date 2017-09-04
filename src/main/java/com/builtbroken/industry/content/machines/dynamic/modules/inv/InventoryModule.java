@@ -123,7 +123,7 @@ public abstract class InventoryModule<I extends IExternalInventory> extends Mach
     @Override
     public void onInventoryChanged(int slot, ItemStack prev, ItemStack item)
     {
-        if (getHost() != null && !getHost().world().isRemote)
+        if (getHost() != null && !getHost().oldWorld().isRemote)
         {
             getHost().onMachineChanged(false);
         }

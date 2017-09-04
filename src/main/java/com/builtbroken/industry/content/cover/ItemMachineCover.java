@@ -2,7 +2,7 @@ package com.builtbroken.industry.content.cover;
 
 import com.builtbroken.industry.BasicIndustry;
 import com.builtbroken.mc.prefab.items.ItemAbstract;
-import com.builtbroken.mc.prefab.items.ItemStackWrapper;
+import com.builtbroken.mc.lib.data.item.ItemStackWrapper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;

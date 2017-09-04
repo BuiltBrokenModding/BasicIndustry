@@ -9,7 +9,7 @@ import com.builtbroken.mc.core.registry.implement.IRecipeContainer;
 import com.builtbroken.mc.lib.helper.recipe.OreNames;
 import com.builtbroken.mc.prefab.module.ItemAbstractModule;
 import com.builtbroken.mc.prefab.module.ModuleBuilder;
-import com.builtbroken.mc.lib.recipe.item.sheetmetal.RecipeSheetMetal;
+import com.builtbroken.mc.framework.recipe.item.sheetmetal.RecipeSheetMetal;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;

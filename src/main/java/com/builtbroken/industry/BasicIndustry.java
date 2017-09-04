@@ -4,11 +4,13 @@ import com.builtbroken.industry.content.cover.ItemMachineCover;
 import com.builtbroken.industry.content.items.ItemParts;
 import com.builtbroken.industry.content.machines.dynamic.TileDynamicMachine;
 import com.builtbroken.industry.content.machines.dynamic.modules.furnace.TileFurnace;
-import com.builtbroken.industry.content.machines.dynamic.modules.items.*;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemControlModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemInvModule;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemMachineCore;
+import com.builtbroken.industry.content.machines.dynamic.modules.items.ItemPowerModule;
 import com.builtbroken.mc.core.Engine;
-import com.builtbroken.mc.lib.mod.AbstractMod;
-import com.builtbroken.mc.lib.mod.ModCreativeTab;
-import com.builtbroken.mc.mods.nei.NEIProxy;
+import com.builtbroken.mc.framework.mod.AbstractMod;
+import com.builtbroken.mc.framework.mod.ModCreativeTab;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -91,7 +93,6 @@ public class BasicIndustry extends AbstractMod
         itemControlModules = manager.newItem("BIControlModule", new ItemControlModule());
 
         itemMachineCover = manager.newItem("BIMachineCover", new ItemMachineCover());
-        NEIProxy.hideItem(itemMachineCore);
         itemParts = manager.newItem("BIModuleParts", new ItemParts());
 
         //Register modules

@@ -28,7 +28,7 @@ item.basicindustry:powerModule.ue.name=Battery Module
 
 item.basicindustry:powerModule.burner.info=Simple steam piston burner, uses burnable fuel to operate
 item.basicindustry:powerModule.rf.info=Adds compatibility with RF power, Provides an internal buffer, Coverts rf into work
-item.basicindustry:powerModule.ue.info=Adds compatibility with power systems, Provides basic battery storage, Converts power into work
+item.basicindustry:powerModule.ue.info=Adds compatibility with power systems, Provides basic node storage, Converts power into work
 
 ## Control Module
 item.basicindustry:controlModule.redstone.name=Redstone Controller
