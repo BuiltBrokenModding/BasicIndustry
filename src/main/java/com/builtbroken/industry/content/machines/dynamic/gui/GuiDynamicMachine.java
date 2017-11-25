@@ -9,18 +9,15 @@ import com.builtbroken.mc.prefab.gui.buttons.GuiImageButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 
 import java.awt.*;
 
 /**
- * Gui for the dynamic machine
+ * Gui for the dynamic host
  * Created by robert on 1/8/2015.
  */
-public class GuiDynamicMachine extends GuiContainerBase
+public class GuiDynamicMachine extends GuiContainerBase<TileDynamicMachine>
 {
-    protected TileDynamicMachine machine;
-
     private GuiImageButton craftingButton;
     private GuiImageButton moduleButton;
     private GuiImageButton helpButton;
@@ -30,10 +27,9 @@ public class GuiDynamicMachine extends GuiContainerBase
 
     public final int guiType;
 
-    public GuiDynamicMachine(TileDynamicMachine machine, EntityPlayer player, int id)
+    public GuiDynamicMachine(TileDynamicMachine host, EntityPlayer player, int id)
     {
-        super(new ContainerDynamicMachine(machine, player, id));
-        this.machine = machine;
+        super(new ContainerDynamicMachine(host, player, id), host);
         guiType = id;
     }
 
@@ -81,7 +77,7 @@ public class GuiDynamicMachine extends GuiContainerBase
         int id = button.id;
         if (id >= 0 && id <= 5)
         {
-            Engine.packetHandler.sendToServer(new PacketTile(machine, 2, id));
+            Engine.packetHandler.sendToServer(new PacketTile(host, 2, id));
             return;
         }
     }
@@ -90,7 +86,7 @@ public class GuiDynamicMachine extends GuiContainerBase
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
     {
         super.drawGuiContainerForegroundLayer(p_146979_1_, p_146979_2_);
-        String s = this.machine.hasCustomInventoryName() ? this.machine.getInventoryName() : I18n.format(this.machine.getInventoryName(), new Object[0]);
+        String s = this.host.hasCustomInventoryName() ? this.host.getInventoryName() : I18n.format(this.host.getInventoryName(), new Object[0]);
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
         //TODO tool tips for buttons
     }
@@ -101,17 +97,14 @@ public class GuiDynamicMachine extends GuiContainerBase
         super.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
 
         //Draw slots
-        for (Object object : inventorySlots.inventorySlots)
-        {
-            drawSlot((Slot) object);
-        }
+        drawContainerSlots();
 
         if (guiType == ContainerDynamicMachine.CRAFTING_GUI_ID)
         {
             //Draw progress bar, TODO fix
-            if (machine.getMachineCore() != null)
+            if (host.getMachineCore() != null)
             {
-                float percent = (float) machine.getMachineCore().getProcessingTicks() / (float) machine.getMachineCore().getRecipeProcessingTime();
+                float percent = (float) host.getMachineCore().getProcessingTicks() / (float) host.getMachineCore().getRecipeProcessingTime();
                 drawMicroBar(65, 17, 40, percent, Color.ORANGE);
             }
         }

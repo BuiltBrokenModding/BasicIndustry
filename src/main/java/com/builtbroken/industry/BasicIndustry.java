@@ -71,7 +71,6 @@ public class BasicIndustry extends AbstractMod
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
-        Engine.requestOres();
         Engine.requestResources();
         Engine.requestSheetMetalContent();
         //Engine.requestMultiBlock(); TODO enable when needed
